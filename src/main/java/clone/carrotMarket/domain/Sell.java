@@ -52,8 +52,6 @@ public class Sell {
         productImage.setSell(this);
     }
 
-
-
     public static Sell createSell(Member member, List<ProductImage> productImages, String title, String content,
                                   int price, Category category, Place tradePlace) {
 
@@ -71,4 +69,5 @@ public class Sell {
         sell.setCreatedAt(LocalDateTime.now());
         return sell;
     }
+
 }

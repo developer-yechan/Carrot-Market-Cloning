@@ -1,6 +1,7 @@
 package clone.carrotMarket.repository;
 
 import clone.carrotMarket.domain.Sell;
+import clone.carrotMarket.dto.EditSellDto;
 import clone.carrotMarket.dto.MySellDetailDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,11 @@ public class SellRepository {
     public List<Sell> findMySellById(Long sellId){
         String query = "select distinct s from Sell s " +
                 "join fetch s.member m " +
+                "join fetch s.productImages pi where s.id=:sellId";
+        return em.createQuery(query,Sell.class).setParameter("sellId",sellId).getResultList();
+    }
+    public List<Sell> findMySimpleSellById(Long sellId){
+        String query = "select distinct s from Sell s " +
                 "join fetch s.productImages pi where s.id=:sellId";
         return em.createQuery(query,Sell.class).setParameter("sellId",sellId).getResultList();
     }
