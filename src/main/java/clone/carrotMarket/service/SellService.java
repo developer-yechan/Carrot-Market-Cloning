@@ -1,12 +1,10 @@
 package clone.carrotMarket.service;
 
-import clone.carrotMarket.domain.Member;
-import clone.carrotMarket.domain.Place;
-import clone.carrotMarket.domain.ProductImage;
-import clone.carrotMarket.domain.Sell;
+import clone.carrotMarket.domain.*;
 import clone.carrotMarket.dto.CreateSellDto;
 import clone.carrotMarket.dto.EditSellDto;
 import clone.carrotMarket.dto.MySellDetailDto;
+import clone.carrotMarket.dto.MySellDto;
 import clone.carrotMarket.file.FileStore;
 import clone.carrotMarket.repository.SellRepository;
 import lombok.AllArgsConstructor;
@@ -32,7 +30,10 @@ public class SellService {
         Sell mySell = mySells.get(0);
         if(editSellDto.getImageFiles() != null){
             List<ProductImage> productImages = fileStore.storeImages(editSellDto.getImageFiles());
-            mySell.setProductImages(productImages);
+            mySell.getProductImages().clear();
+            for (ProductImage productImage : productImages) {
+                mySell.addProductImage(productImage);
+            }
         }
         if(StringUtils.hasText(editSellDto.getPlace())){
             Place place = new Place(editSellDto.getPlace(), editSellDto.getLatitude(), editSellDto.getLongitude());
@@ -59,6 +60,7 @@ public class SellService {
 
     public MySellDetailDto findMySell(Long sellId) {
         List<Sell> mySells = sellRepository.findMySellById(sellId);
+        System.out.println("mySells = " + mySells);
         List<MySellDetailDto> result = mySells.stream().map(mySell -> new MySellDetailDto(mySell))
                 .collect(Collectors.toList());
         return result.get(0);
@@ -69,5 +71,24 @@ public class SellService {
         List<EditSellDto> result = mySells.stream().map(mySell -> new EditSellDto(mySell))
                 .collect(Collectors.toList());
         return result.get(0);
+    }
+
+    @Transactional
+    public void delete(Long sellId) {
+        List<Sell> mySells = sellRepository.findMySimpleSellById(sellId);
+        sellRepository.delete(mySells.get(0));
+    }
+
+    public List<MySellDto> findMySells(Long memberId) {
+        List<Sell> mySells = sellRepository.findMySellsByMemberId(memberId);
+        return mySells.stream().map(mySell -> new MySellDto(mySell))
+                .collect(Collectors.toList());
+
+    }
+
+    @Transactional
+    public void updateStatus(Long sellId, SellStatus sellStatus) {
+        Sell sell = sellRepository.updateStatus(sellId, sellStatus);
+        System.out.println("sell = " + sell);
     }
 }

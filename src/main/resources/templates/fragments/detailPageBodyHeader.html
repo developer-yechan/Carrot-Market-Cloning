@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div class="bodyHeader" th:fragment="header">
+    <span class="home-icon" th:onclick="|javascript:goToSells('${sell.sellId}')|">&#8962;</span>
+    <span class="menu-icon" onclick="toggleMenuBox(this)">&#9776;</span>
+</div>
+

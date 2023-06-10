@@ -6,6 +6,7 @@ import clone.carrotMarket.domain.ProductImage;
 import clone.carrotMarket.domain.Sell;
 import clone.carrotMarket.dto.EditSellDto;
 import clone.carrotMarket.dto.MySellDetailDto;
+import clone.carrotMarket.dto.MySellDto;
 import clone.carrotMarket.file.FileStore;
 import clone.carrotMarket.repository.SellRepository;
 import clone.carrotMarket.service.SellService;
@@ -29,12 +30,20 @@ public class SellApiController {
 
     private final SellService sellService;
     private final SellRepository sellRepository;
+
+    //나의 판매글 상세페이지 Controller
     @GetMapping("/my/{sellId}")
     public MySellDetailDto mySellDetail(@PathVariable Long sellId){
         List<Sell> mySells = sellRepository.findMySellById(sellId);
         List<MySellDetailDto> result = mySells.stream().map(mySell -> new MySellDetailDto(mySell))
                 .collect(Collectors.toList());
         return result.get(0);
+    }
+
+    //나의 판매글 목록페이지 Controller
+    @GetMapping("/my")
+    public List<MySellDto> findMySells(@Login Member loginMember){
+        return sellService.findMySells(loginMember.getId());
     }
 
     @PatchMapping("/edit")

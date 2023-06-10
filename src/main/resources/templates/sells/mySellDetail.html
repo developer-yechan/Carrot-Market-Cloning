@@ -1,11 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<style>
+        .heart-icon {
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .heart-icon.filled {
+            color: red;
+        }
+
+        .bodyHeader {
+            padding: 10px;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center;
+        }
+        .bodyHeaderBox{
+        position : relative;
+        }
+
+        .menu-icon, .home-icon {
+            font-size: 20px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .menu-box {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            z-index: 2;
+        }
+
+        .menu-box.show {
+            display: block;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+        }
+
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .swiper-slide-prev, .swiper-slide-next {
+            visibility : hidden !important;
+        }
+
+
+        .swiper-pagination-bullet {
+            width: 10px;
+            height: 10px;
+            background-color: #ccc;
+            border-radius: 50%;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .swiper-pagination-bullet-active {
+            opacity: 1;
+            background-color: #000;
+        }
+
+    </style>
 <body>
-<a href="/sells/edit?"></a>
-나의 판매내역 상세페이지
+
+<div class="container">
+<div class="bodyHeaderBox">
+    <div th:replace="fragments/detailPageBodyHeader :: header"/>
+    <div class="menu-box" id="menuBox">
+        <a th:href="@{/sells/edit/{sellId}(sellId=${sell.sellId})}">수정</a>
+        <form th:action="|/sells/${sell.sellId}|" method="post">
+            <input type="hidden" name="_method" value="DELETE"/>
+            <button type="submit">삭제</button>
+        </form>
+    </div>
+</div>
+<div th:if="${sell.productImages.size()>0}" class="swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide" th:each="productImage : ${sell.productImages}">
+            <img  th:src="|/sells/images/${productImage.imageUrl}|" alt="상품 이미지" width="100%" height="100%">
+        </div>
+    </div>
+    <div class="swiper-pagination"></div>
+</div>
+
+<div>
+    <span th:text="${sell.userNickname}">닉네임</span>
+    <img th:if="${sell.userImage != null}" th:src="${sell.userImage}" alt="유저 이미지" width="10px" height="10px">
+    <img th:if="${sell.userImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="10px" height="10px">
+</div>
+
+<form id="statusForm" th:action="@{/sells/{sellId}/updateStatus(sellId=${sell.sellId})}" method="post">
+    <select name="sellStatus" th:onchange="|javascript:updateStatus()|">
+        <option value="판매중" th:selected="${sell.sellStatus.toString()}=='판매중'">판매중</option>
+        <option value="예약중" th:selected="${sell.sellStatus.toString()}=='예약중'">예약중</option>
+        <option value="판매완료" th:selected="${sell.sellStatus.toString()}=='판매완료'">판매완료</option>
+    </select>
+</form>
+
+<h3 th:text="${sell.title}">제목</h3>
+<span th:text="${sell.category}">카테고리</span>
+<span th:text="${sell.createdAt}">게시 시간</span>
+
+<p th:text="${sell.content}">본문</p>
+
+
+
+
+<div>
+    <span class="heart-icon" onclick="toggleHeart(this)">&#x2661;</span>
+    <span th:text="${sell.price}">상품 가격</span>
+    <button>채팅하기</button>
+</div>
+</div>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+        function updateStatus(status,sellId) {
+            var form = document.getElementById('statusForm');
+            // 선택한 상태 값을 전송하기 위해 숨겨진 input 요소 추가
+            var statusInput = document.createElement('input');
+            statusInput.type = 'hidden';
+            statusInput.name = '_method';
+            statusInput.value = 'patch';
+
+            form.appendChild(statusInput);
+
+            form.submit();
+        }
+
+        function toggleHeart(icon) {
+            icon.classList.toggle('filled');
+        }
+
+         // 홈버튼 클릭 이벤트
+        function goToSells(sellId) {
+            // 판매글 목록 페이지 URL로 이동
+            window.location.href = '/sells/my'
+        }
+
+        // 메뉴 버튼 클릭 이벤트
+        function toggleMenuBox(icon) {
+            var menuBox = document.getElementById('menuBox');
+            menuBox.classList.toggle('show');
+        }
+
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 1,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
+</script>
 </body>
 </html>

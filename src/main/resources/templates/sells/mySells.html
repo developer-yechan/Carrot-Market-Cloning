@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<style>
+        .heart-icon {
+            color: red;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .message-icon {
+            color: blue;
+            margin-right: 5px;
+        }
+
+    </style>
+<body>
+<div class="container">
+<h1>상품 목록</h1>
+<table>
+    <tr th:each="sell : ${sells}" th:onclick="|javascript:goToSellDetail('${sell.sellId}')|">
+        <td>
+            <img th:if="${sell.productImages.size()>0}" th:src="|/sells/images/${sell.productImages.get(0).getImageUrl()}|" width="100" height="100" />
+            <img th:unless="${sell.productImages.size()>0}" th:src="|/image/noImage.jpg|" width="100" height="100" />
+        </td>
+        <td>
+            <h3 th:text="${sell.title}">제목</h3>
+            <p th:text="${sell.userPlace}">장소</p>
+            <p th:text="${sell.price}"> >가격</p>
+        </td>
+        <td>
+            <span class="heart-icon">&#x2661;</span>
+            <span th:text="${sell.sellLikeCnt}"></span>
+            <span class="message-icon">&#x2709;</span>
+            <span th:text="${sell.chatRoomCnt}"></span>
+        </td>
+    </tr>
+</table>
+</div>
+<script>
+        function goToSellDetail(sellId) {
+            // 판매글 상세 페이지 URL로 이동
+            window.location.href = '/sells/' + sellId;
+        }
+    </script>
+</body>
+
+</html>

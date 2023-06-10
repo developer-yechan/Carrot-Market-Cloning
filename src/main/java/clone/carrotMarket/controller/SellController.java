@@ -4,6 +4,7 @@ import clone.carrotMarket.domain.*;
 import clone.carrotMarket.dto.CreateSellDto;
 import clone.carrotMarket.dto.EditSellDto;
 import clone.carrotMarket.dto.MySellDetailDto;
+import clone.carrotMarket.dto.MySellDto;
 import clone.carrotMarket.file.FileStore;
 import clone.carrotMarket.service.SellService;
 import clone.carrotMarket.web.argumentresolver.Login;
@@ -56,13 +57,22 @@ public class SellController {
             return "redirect:/members/login";
         }
         Long sellId = sellService.save(createSellDto, loginMember);
-        return "redirect:/sells/my/"+sellId;
+        return "redirect:/sells/"+sellId;
+    }
+    //나의 판매글 목록 페이지 Controller
+    @GetMapping("/my")
+    public String findMySells(@Login Member loginMember,Model model){
+        List<MySellDto> mySells = sellService.findMySells(loginMember.getId());
+        model.addAttribute("sells",mySells);
+        return "sells/mySells";
     }
 
-    @GetMapping("/my/{sellId}")
+    //나의 판매글 상세 페이지 Controller
+    @GetMapping("/{sellId}")
     public String mySellDetail(@PathVariable Long sellId, Model model){
         MySellDetailDto mySell = sellService.findMySell(sellId);
-        model.addAttribute("mySell",mySell);
+        System.out.println("mySell = " + mySell);
+        model.addAttribute("sell",mySell);
         return "sells/mySellDetail";
     }
 
@@ -72,7 +82,7 @@ public class SellController {
         model.addAttribute("sell",mySimpleSell);
         return "sells/editForm";
     }
-    @PostMapping("/edit/{sellId}")
+    @PutMapping("/edit/{sellId}")
     public String editSell(
                            @Valid @ModelAttribute("sell") EditSellDto editSellDto, BindingResult result,
                            @Login Member loginMember, Model model) throws IOException {
@@ -83,7 +93,25 @@ public class SellController {
             return "redirect:/members/login";
         }
         Long sellId = sellService.update(editSellDto);
-        return "redirect:/sells/my/"+sellId;
+        return "redirect:/sells/"+sellId;
+    }
+
+    @PatchMapping("{sellId}/updateStatus")
+    public String updateStatus(@PathVariable Long sellId, @RequestParam SellStatus sellStatus){
+        System.out.println("sellStatus = " + sellStatus);
+        sellService.updateStatus(sellId,sellStatus);
+        return "redirect:/sells/"+sellId;
+    }
+
+    @DeleteMapping("/{sellId}")
+    public String deleteSell(@PathVariable Long sellId){
+        sellService.delete(sellId);
+        return "redirect:/sells/my";
+    }
+
+    @GetMapping
+    public String mySells(){
+        return "sells/mySells";
     }
 
     @ResponseBody

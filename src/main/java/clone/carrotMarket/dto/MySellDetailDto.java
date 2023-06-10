@@ -26,9 +26,9 @@ public class MySellDetailDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private String nickname;
+    private String userNickname;
 
-    private String profileImage;
+    private String userImage;
 
 
     public MySellDetailDto(Sell sell){
@@ -46,7 +46,8 @@ public class MySellDetailDto {
         views = sell.getViews();
         createdAt = sell.getCreatedAt();
         updatedAt = sell.getUpdatedAt();
-        nickname = sell.getMember().getNickname();
-        profileImage = sell.getMember().getProfileImage();
+        userNickname = sell.getMember().getNickname();
+        userImage = sell.getMember().getProfileImage();
     }
+
 }

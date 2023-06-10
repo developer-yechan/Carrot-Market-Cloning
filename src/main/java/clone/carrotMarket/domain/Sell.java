@@ -22,13 +22,13 @@ public class Sell {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "sell",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sell",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ProductImage> productImages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "sell",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "sell",cascade = CascadeType.REMOVE,orphanRemoval = true)
     private List<SellLike> sellLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "sell",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "sell",cascade = CascadeType.REMOVE,orphanRemoval = true)
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -70,4 +70,10 @@ public class Sell {
         return sell;
     }
 
+    @Override
+    public String toString() {
+        return "Sell{" +
+                "sellStatus=" + sellStatus +
+                '}';
+    }
 }
