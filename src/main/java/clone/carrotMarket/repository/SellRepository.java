@@ -8,6 +8,7 @@ import clone.carrotMarket.dto.MySellDetailDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -40,18 +41,20 @@ public class SellRepository {
     }
 
     // 나의 판매내역 페이지 조회
-    public List<Sell> findMySellsByMemberId(Long memberId){
+    public List<Sell> findMySellsByMemberId(Long memberId, String filteringQuery){
         String query = "select distinct s from Sell s " +
                 "join fetch s.member m " +
-                "left join fetch s.productImages pi where m.id=:memberId";
-        return em.createQuery(query,Sell.class).setParameter("memberId",memberId).getResultList();
+                "left join fetch s.productImages pi where m.id=:memberId" + filteringQuery;
+        return em.createQuery(query,Sell.class)
+                .setParameter("memberId",memberId)
+                .getResultList();
     }
 
     // 남의 판매내역 페이지 조회
-    public List<Sell> findSellsByMemberId(Long memberId){
+    public List<Sell> findSells(Long memberId){
         String query = "select distinct s from Sell s " +
                 "join fetch s.member m " +
-                "left join fetch s.productImages pi where m.id>:memberId or m.id<:memberId";
+                "left join fetch s.productImages pi where m.id not in (:memberId) and s.sellStatus not in ('판매완료')";
         return em.createQuery(query,Sell.class).setParameter("memberId",memberId).getResultList();
     }
 

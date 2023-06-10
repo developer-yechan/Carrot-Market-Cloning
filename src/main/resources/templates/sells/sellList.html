@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<style>
+        .heart-icon {
+            color: red;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .message-icon {
+            color: blue;
+            margin-right: 5px;
+        }
+        .statusButton{
+            display : block;
+        }
+        .container{
+        position : relative;
+        }
+        .addButton{
+        position : absolute;
+        right : 50%;
+        }
+
+    </style>
+<body>
+<div class="container">
+  <h3 th:text="${myPlace}">회원님 동네</h3>
+
+  <table>
+    <tr th:each="sell : ${sells}">
+      <td th:onclick="|javascript:goToSellDetail('${sell.sellId}')|">
+        <img th:if="${sell.productImages.size()>0}" th:src="|/sells/images/${sell.productImages.get(0).getImageUrl()}|" width="100" height="100" />
+        <img th:unless="${sell.productImages.size()>0}" th:src="|/image/noImage.jpg|" width="100" height="100" />
+      </td>
+      <td th:onclick="|javascript:goToSellDetail('${sell.sellId}')|">
+        <h3 th:text="${sell.title}">제목</h3>
+        <span th:if="${sell.sellStatus.toString()} == '예약중'">예약중</span>
+        <p th:text="${sell.userPlace}">장소</p>
+        <p th:text="|${sell.price}원|"> >가격</p>
+      </td>
+      <td th:onclick="|javascript:goToSellDetail('${sell.sellId}')|">
+        <span class="heart-icon">&#x2661;</span>
+        <span th:text="${sell.sellLikeCnt}"></span>
+        <span class="message-icon">&#x2709;</span>
+        <span th:text="${sell.chatRoomCnt}"></span>
+      </td>
+    </tr>
+  </table>
+  <div class="addButton">
+    <a th:href="@{/sells/add}">
+      <img th:src="|/image/plus.jpg|" width="150" height="150" />
+    </a>
+  </div>
+</div>
+<script>
+        function updateStatus(status) {
+            var form = document.getElementById('statusForm');
+            // 선택한 상태 값을 전송하기 위해 숨겨진 input 요소 추가
+            var hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = '_method';
+            hiddenInput.value = 'patch';
+
+            var valueInput = document.createElement('input');
+            valueInput.type = 'hidden';
+            valueInput.name = 'sellStatus';
+            valueInput.value = status;
+
+            form.appendChild(hiddenInput);
+            form.appendChild(valueInput);
+
+            form.submit();
+        }
+
+        function goToSellDetail(sellId) {
+            // 판매글 상세 페이지 URL로 이동
+            window.location.href = '/sells/' + sellId;
+        }
+    </script>
+</body>
+
+</html>

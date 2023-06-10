@@ -4,7 +4,7 @@ import clone.carrotMarket.domain.*;
 import clone.carrotMarket.dto.CreateSellDto;
 import clone.carrotMarket.dto.EditSellDto;
 import clone.carrotMarket.dto.MySellDetailDto;
-import clone.carrotMarket.dto.MySellDto;
+import clone.carrotMarket.dto.SellDto;
 import clone.carrotMarket.file.FileStore;
 import clone.carrotMarket.repository.SellRepository;
 import lombok.AllArgsConstructor;
@@ -60,7 +60,6 @@ public class SellService {
 
     public MySellDetailDto findMySell(Long sellId) {
         List<Sell> mySells = sellRepository.findMySellById(sellId);
-        System.out.println("mySells = " + mySells);
         List<MySellDetailDto> result = mySells.stream().map(mySell -> new MySellDetailDto(mySell))
                 .collect(Collectors.toList());
         return result.get(0);
@@ -79,16 +78,26 @@ public class SellService {
         sellRepository.delete(mySells.get(0));
     }
 
-    public List<MySellDto> findMySells(Long memberId) {
-        List<Sell> mySells = sellRepository.findMySellsByMemberId(memberId);
-        return mySells.stream().map(mySell -> new MySellDto(mySell))
+    public List<SellDto> findMySells(Long memberId, SellStatus sellStatus) {
+        String filteringQuery = "";
+        if(sellStatus != SellStatus.판매완료){
+            filteringQuery = " and s.sellStatus not in ('판매완료')";
+        }else{
+            filteringQuery = " and s.sellStatus in ('판매완료')";
+        }
+        List<Sell> mySells = sellRepository.findMySellsByMemberId(memberId,filteringQuery);
+        return mySells.stream().map(mySell -> new SellDto(mySell))
                 .collect(Collectors.toList());
-
     }
 
     @Transactional
     public void updateStatus(Long sellId, SellStatus sellStatus) {
         Sell sell = sellRepository.updateStatus(sellId, sellStatus);
-        System.out.println("sell = " + sell);
+    }
+
+    public List<SellDto> findSells(Long memberId) {
+        List<Sell> sells = sellRepository.findSells(memberId);
+        return sells.stream().map(mySell -> new SellDto(mySell))
+                .collect(Collectors.toList());
     }
 }

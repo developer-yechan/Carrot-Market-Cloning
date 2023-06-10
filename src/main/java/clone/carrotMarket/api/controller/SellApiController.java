@@ -1,12 +1,9 @@
 package clone.carrotMarket.api.controller;
 
-import clone.carrotMarket.domain.Member;
-import clone.carrotMarket.domain.Place;
-import clone.carrotMarket.domain.ProductImage;
-import clone.carrotMarket.domain.Sell;
+import clone.carrotMarket.domain.*;
 import clone.carrotMarket.dto.EditSellDto;
 import clone.carrotMarket.dto.MySellDetailDto;
-import clone.carrotMarket.dto.MySellDto;
+import clone.carrotMarket.dto.SellDto;
 import clone.carrotMarket.file.FileStore;
 import clone.carrotMarket.repository.SellRepository;
 import clone.carrotMarket.service.SellService;
@@ -42,8 +39,8 @@ public class SellApiController {
 
     //나의 판매글 목록페이지 Controller
     @GetMapping("/my")
-    public List<MySellDto> findMySells(@Login Member loginMember){
-        return sellService.findMySells(loginMember.getId());
+    public List<SellDto> findMySells(@Login Member loginMember, @RequestParam(defaultValue = "판매중") SellStatus sellStatus){
+        return sellService.findMySells(loginMember.getId(),sellStatus);
     }
 
     @PatchMapping("/edit")

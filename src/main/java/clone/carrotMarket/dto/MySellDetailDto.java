@@ -30,6 +30,8 @@ public class MySellDetailDto {
 
     private String userImage;
 
+    private String userPlace;
+
 
     public MySellDetailDto(Sell sell){
         sellId = sell.getId();
@@ -48,6 +50,7 @@ public class MySellDetailDto {
         updatedAt = sell.getUpdatedAt();
         userNickname = sell.getMember().getNickname();
         userImage = sell.getMember().getProfileImage();
+        userPlace = sell.getMember().getMyPlace().getPlace();
     }
 
 }

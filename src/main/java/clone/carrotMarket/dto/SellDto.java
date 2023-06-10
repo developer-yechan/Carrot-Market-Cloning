@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-public class MySellDto {
+public class SellDto {
     private Long sellId;
     private String title;
     private List<ProductImageDto> productImages;
@@ -23,7 +23,7 @@ public class MySellDto {
 
     private String userPlace;
 
-    public MySellDto(Sell sell){
+    public SellDto(Sell sell){
         sellId = sell.getId();
         title = sell.getTitle();
         productImages = sell.getProductImages().stream()
@@ -35,6 +35,7 @@ public class MySellDto {
         price = sell.getPrice();
         chatRoomCnt = sell.getChatRooms().size();
         userPlace = sell.getMember().getMyPlace().getPlace();
+        sellStatus = sell.getSellStatus();
     }
 
 }

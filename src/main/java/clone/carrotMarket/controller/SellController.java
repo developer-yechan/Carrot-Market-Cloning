@@ -4,7 +4,7 @@ import clone.carrotMarket.domain.*;
 import clone.carrotMarket.dto.CreateSellDto;
 import clone.carrotMarket.dto.EditSellDto;
 import clone.carrotMarket.dto.MySellDetailDto;
-import clone.carrotMarket.dto.MySellDto;
+import clone.carrotMarket.dto.SellDto;
 import clone.carrotMarket.file.FileStore;
 import clone.carrotMarket.service.SellService;
 import clone.carrotMarket.web.argumentresolver.Login;
@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -61,17 +62,24 @@ public class SellController {
     }
     //나의 판매글 목록 페이지 Controller
     @GetMapping("/my")
-    public String findMySells(@Login Member loginMember,Model model){
-        List<MySellDto> mySells = sellService.findMySells(loginMember.getId());
+    public String findMySells(@Login Member loginMember, @RequestParam(defaultValue = "판매중") SellStatus sellStatus, Model model){
+        List<SellDto> mySells = sellService.findMySells(loginMember.getId(),sellStatus);
         model.addAttribute("sells",mySells);
         return "sells/mySells";
+    }
+
+    @GetMapping
+    public String findSells(@Login Member loginMember, Model model){
+        List<SellDto> mySells = sellService.findSells(loginMember.getId());
+        model.addAttribute("myPlace",loginMember.getMyPlace().getPlace());
+        model.addAttribute("sells",mySells);
+        return "sells/sellList";
     }
 
     //나의 판매글 상세 페이지 Controller
     @GetMapping("/{sellId}")
     public String mySellDetail(@PathVariable Long sellId, Model model){
         MySellDetailDto mySell = sellService.findMySell(sellId);
-        System.out.println("mySell = " + mySell);
         model.addAttribute("sell",mySell);
         return "sells/mySellDetail";
     }
@@ -97,9 +105,14 @@ public class SellController {
     }
 
     @PatchMapping("{sellId}/updateStatus")
-    public String updateStatus(@PathVariable Long sellId, @RequestParam SellStatus sellStatus){
-        System.out.println("sellStatus = " + sellStatus);
+    public String updateStatus(@PathVariable Long sellId, @RequestParam SellStatus sellStatus, HttpServletRequest request){
         sellService.updateStatus(sellId,sellStatus);
+        String referer = request.getHeader("referer");
+        String[] refererStrings = referer.split("/");
+        String lastString = refererStrings[refererStrings.length-1];
+        if(lastString.startsWith("my")){
+            return "redirect:/sells/my";
+        }
         return "redirect:/sells/"+sellId;
     }
 
@@ -107,11 +120,6 @@ public class SellController {
     public String deleteSell(@PathVariable Long sellId){
         sellService.delete(sellId);
         return "redirect:/sells/my";
-    }
-
-    @GetMapping
-    public String mySells(){
-        return "sells/mySells";
     }
 
     @ResponseBody

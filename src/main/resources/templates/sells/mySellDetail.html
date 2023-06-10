@@ -73,6 +73,10 @@
             opacity: 1;
             background-color: #000;
         }
+        .user-info{
+        display : flex;
+        align-items : center;
+        }
 
     </style>
 <body>
@@ -97,10 +101,13 @@
     <div class="swiper-pagination"></div>
 </div>
 
-<div>
-    <span th:text="${sell.userNickname}">닉네임</span>
-    <img th:if="${sell.userImage != null}" th:src="${sell.userImage}" alt="유저 이미지" width="10px" height="10px">
-    <img th:if="${sell.userImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="10px" height="10px">
+<div class="user-info">
+    <img th:if="${sell.userImage != null}" th:src="${sell.userImage}" alt="유저 이미지" width="30px" height="30px">
+    <img th:if="${sell.userImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
+    <div>
+        <h5 th:text="${sell.userNickname}">닉네임</h5>
+        <span th:text="${sell.userPlace}">장소</span>
+    </div>
 </div>
 
 <form id="statusForm" th:action="@{/sells/{sellId}/updateStatus(sellId=${sell.sellId})}" method="post">
@@ -122,13 +129,13 @@
 
 <div>
     <span class="heart-icon" onclick="toggleHeart(this)">&#x2661;</span>
-    <span th:text="${sell.price}">상품 가격</span>
-    <button>채팅하기</button>
+    <span th:text="|${sell.price}원|">상품 가격</span>
+    <button>대화 중인 채팅방</button>
 </div>
 </div>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
-        function updateStatus(status,sellId) {
+        function updateStatus() {
             var form = document.getElementById('statusForm');
             // 선택한 상태 값을 전송하기 위해 숨겨진 input 요소 추가
             var statusInput = document.createElement('input');

@@ -38,8 +38,9 @@ public class MemberController {
         if(result.hasErrors()){
             return "members/createMemberForm";
         }
+        Place userPlace = new Place(createMemberDto.getPlace(), createMemberDto.getLatitude(), createMemberDto.getLongitude());
         Member member = new Member(createMemberDto.getEmail(), createMemberDto.getPassword(),
-                createMemberDto.getPhoneNumber(), createMemberDto.getNickname(),new Place());
+                createMemberDto.getPhoneNumber(), createMemberDto.getNickname(),userPlace);
         try {
             memberService.signUp(member);
         }catch(Exception e){
@@ -58,7 +59,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute LoginDto loginDto, BindingResult result,
-                        HttpServletRequest request, @RequestParam(defaultValue = "/") String redirectURL){
+                        HttpServletRequest request, @RequestParam(defaultValue = "/sells") String redirectURL){
         if(result.hasErrors()){
             return "members/loginForm";
         }
