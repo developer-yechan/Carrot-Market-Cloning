@@ -77,7 +77,7 @@ public class SellController {
     }
 
     //나의 판매글 상세 페이지 Controller
-    @GetMapping("/{sellId}")
+    @GetMapping("/my/{sellId}")
     public String mySellDetail(@PathVariable Long sellId, Model model){
         MySellDetailDto mySell = sellService.findMySell(sellId);
         model.addAttribute("sell",mySell);
@@ -101,7 +101,7 @@ public class SellController {
             return "redirect:/members/login";
         }
         Long sellId = sellService.update(editSellDto);
-        return "redirect:/sells/"+sellId;
+        return "redirect:/sells/my/"+sellId;
     }
 
     @PatchMapping("{sellId}/updateStatus")
@@ -113,7 +113,7 @@ public class SellController {
         if(lastString.startsWith("my")){
             return "redirect:/sells/my";
         }
-        return "redirect:/sells/"+sellId;
+        return "redirect:/sells/my/"+sellId;
     }
 
     @DeleteMapping("/{sellId}")

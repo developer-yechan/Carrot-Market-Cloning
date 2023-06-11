@@ -43,18 +43,18 @@
             <span th:text="${sell.chatRoomCnt}"></span>
         </td>
         <td class="filter">
-            <form id="statusForm" th:action="@{/sells/{sellId}/updateStatus(sellId=${sell.sellId})}" method="post">
-                <button class="statusButton" th:if="${sell.sellStatus.toString()} != '판매중'" th:onclick="|javascript:updateStatus('판매중')|">판매중으로 변경</button>
-                <button class="statusButton" th:if="${sell.sellStatus.toString()} != '예약중'" th:onclick="|javascript:updateStatus('예약중')|">예약중으로 변경</button>
-                <button class="statusButton" th:if="${sell.sellStatus.toString()} != '판매완료'" th:onclick="|javascript:updateStatus('판매완료')|">거래완료로 변경</button>
+            <form th:id="|statusForm${sell.sellId}|" th:action="@{/sells/{sellId}/updateStatus(sellId=${sell.sellId})}" method="post">
+                <button class="statusButton" th:if="${sell.sellStatus.toString()} != '판매중'" th:onclick="|javascript:updateStatus('판매중',${sell.sellId})|">판매중으로 변경</button>
+                <button class="statusButton" th:if="${sell.sellStatus.toString()} != '예약중'" th:onclick="|javascript:updateStatus('예약중',${sell.sellId})|">예약중으로 변경</button>
+                <button class="statusButton" th:if="${sell.sellStatus.toString()} != '판매완료'" th:onclick="|javascript:updateStatus('판매완료',${sell.sellId})|">거래완료로 변경</button>
             </form>
         </td>
     </tr>
 </table>
 </div>
 <script>
-        function updateStatus(status) {
-            var form = document.getElementById('statusForm');
+        function updateStatus(status,sellId) {
+            var form = document.getElementById('statusForm'+sellId);
             // 선택한 상태 값을 전송하기 위해 숨겨진 input 요소 추가
             var hiddenInput = document.createElement('input');
             hiddenInput.type = 'hidden';
@@ -74,7 +74,7 @@
         
         function goToSellDetail(sellId) {
             // 판매글 상세 페이지 URL로 이동
-            window.location.href = '/sells/' + sellId;
+            window.location.href = '/sells/my/' + sellId;
         }
     </script>
 </body>
