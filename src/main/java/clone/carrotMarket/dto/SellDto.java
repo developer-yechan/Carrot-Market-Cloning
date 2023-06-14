@@ -21,7 +21,8 @@ public class SellDto {
 
     private int chatRoomCnt;
 
-    private String userPlace;
+    private Long memberId;
+    private String memberPlace;
 
     public SellDto(Sell sell){
         sellId = sell.getId();
@@ -31,11 +32,12 @@ public class SellDto {
                 .map(productImage ->
                        new ProductImageDto(productImage))
                 .collect(Collectors.toList());
+        sellStatus = sell.getSellStatus();
         sellLikeCnt = sell.getSellLikes().size();
         price = sell.getPrice();
         chatRoomCnt = sell.getChatRooms().size();
-        userPlace = sell.getMember().getMyPlace().getPlace();
-        sellStatus = sell.getSellStatus();
+        memberId = sell.getMember().getId();
+        memberPlace = sell.getMember().getMyPlace().getPlace();
     }
 
 }

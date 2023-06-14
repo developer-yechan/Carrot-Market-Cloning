@@ -73,7 +73,7 @@
             opacity: 1;
             background-color: #000;
         }
-        .user-info{
+        .member-info{
         display : flex;
         align-items : center;
         }
@@ -101,12 +101,12 @@
     <div class="swiper-pagination"></div>
 </div>
 
-<div class="user-info">
-    <img th:if="${sell.userImage != null}" th:src="${sell.userImage}" alt="유저 이미지" width="30px" height="30px">
-    <img th:if="${sell.userImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
+<div class="member-info">
+    <img th:if="${sell.memberImage != null}" th:src="${sell.memberImage}" alt="유저 이미지" width="30px" height="30px">
+    <img th:if="${sell.memberImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
     <div>
-        <h5 th:text="${sell.userNickname}">닉네임</h5>
-        <span th:text="${sell.userPlace}">장소</span>
+        <h5 th:text="${sell.memberNickname}">닉네임</h5>
+        <span th:text="${sell.memberPlace}">장소</span>
     </div>
 </div>
 
@@ -155,7 +155,7 @@
          // 홈버튼 클릭 이벤트
         function goToSells(sellId) {
             // 판매글 목록 페이지 URL로 이동
-            window.location.href = '/sells/my'
+            window.location.href = '/sells'
         }
 
         // 메뉴 버튼 클릭 이벤트

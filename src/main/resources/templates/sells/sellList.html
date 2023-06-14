@@ -20,7 +20,24 @@
         }
         .addButton{
         position : absolute;
-        right : 50%;
+        right : 10px;
+        bottom : 50px;
+        }
+        .plus-image{
+        width : 50px;
+        height : 50px;
+        }
+        .button-group{
+        display : flex;
+        justify-content : space-around;
+        align-items : center;
+        width : 259px;
+        position : relative;
+        }
+        .button{
+        display : flex;
+        flex-direction : column;
+        align-items : center;
         }
 
     </style>
@@ -30,53 +47,50 @@
 
   <table>
     <tr th:each="sell : ${sells}">
-      <td th:onclick="|javascript:goToSellDetail('${sell.sellId}')|">
+      <td th:onclick="|javascript:goToSellDetail('${sell.sellId}','${sell.memberId}')|">
         <img th:if="${sell.productImages.size()>0}" th:src="|/sells/images/${sell.productImages.get(0).getImageUrl()}|" width="100" height="100" />
         <img th:unless="${sell.productImages.size()>0}" th:src="|/image/noImage.jpg|" width="100" height="100" />
       </td>
-      <td th:onclick="|javascript:goToSellDetail('${sell.sellId}')|">
+      <td th:onclick="|javascript:goToSellDetail('${sell.sellId}','${sell.memberId}')|">
         <h3 th:text="${sell.title}">제목</h3>
         <span th:if="${sell.sellStatus.toString()} == '예약중'">예약중</span>
-        <p th:text="${sell.userPlace}">장소</p>
+
+        <p th:text="${sell.memberPlace}">장소</p>
         <p th:text="|${sell.price}원|"> >가격</p>
       </td>
-      <td th:onclick="|javascript:goToSellDetail('${sell.sellId}')|">
+      <td th:onclick="|javascript:goToSellDetail('${sell.sellId}','${sell.memberId}')|">
         <span class="heart-icon">&#x2661;</span>
-        <span th:text="${sell.sellLikeCnt}"></span>
+        <span th:if="${sell.sellLikeCnt > 0}" th:text="${sell.sellLikeCnt}"></span>
         <span class="message-icon">&#x2709;</span>
-        <span th:text="${sell.chatRoomCnt}"></span>
+        <span th:if="${sell.chatRoomCnt > 0}"  th:text="${sell.chatRoomCnt}"></span>
       </td>
     </tr>
   </table>
-  <div class="addButton">
-    <a th:href="@{/sells/add}">
-      <img th:src="|/image/plus.jpg|" width="150" height="150" />
-    </a>
+
+  <div class="button-group">
+    <div th:onclick="|javascript:goToSells()|" class="button">
+      <i>&#8962;</i>
+      <span>홈</span>
+    </div>
+    <div class="button">
+      <img th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
+      <span>나의 당근</span>
+    </div>
+    <div class="addButton">
+      <a th:href="@{/sells/add}">
+        <img class="plus-image" th:src="|/image/plus.jpg|"/>
+      </a>
+    </div>
   </div>
 </div>
 <script>
-        function updateStatus(status) {
-            var form = document.getElementById('statusForm');
-            // 선택한 상태 값을 전송하기 위해 숨겨진 input 요소 추가
-            var hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.name = '_method';
-            hiddenInput.value = 'patch';
-
-            var valueInput = document.createElement('input');
-            valueInput.type = 'hidden';
-            valueInput.name = 'sellStatus';
-            valueInput.value = status;
-
-            form.appendChild(hiddenInput);
-            form.appendChild(valueInput);
-
-            form.submit();
-        }
-
-        function goToSellDetail(sellId) {
+        function goToSellDetail(sellId,memberId) {
             // 판매글 상세 페이지 URL로 이동
-            window.location.href = '/sells/' + sellId;
+            window.location.href = `/sells/${sellId}` + `?sellerId=${memberId}`;
+        }
+         function goToSells() {
+            // 판매글 목록 페이지 URL로 이동
+            window.location.href = '/sells'
         }
     </script>
 </body>

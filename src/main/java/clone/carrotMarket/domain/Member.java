@@ -48,4 +48,13 @@ public class Member {
         this.nickname = nickname;
         this.myPlace = myPlace;
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

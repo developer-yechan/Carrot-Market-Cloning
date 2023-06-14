@@ -3,7 +3,7 @@ package clone.carrotMarket.controller;
 import clone.carrotMarket.domain.*;
 import clone.carrotMarket.dto.CreateSellDto;
 import clone.carrotMarket.dto.EditSellDto;
-import clone.carrotMarket.dto.MySellDetailDto;
+import clone.carrotMarket.dto.SellDetailDto;
 import clone.carrotMarket.dto.SellDto;
 import clone.carrotMarket.file.FileStore;
 import clone.carrotMarket.service.SellService;
@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @AllArgsConstructor
@@ -58,9 +59,9 @@ public class SellController {
             return "redirect:/members/login";
         }
         Long sellId = sellService.save(createSellDto, loginMember);
-        return "redirect:/sells/"+sellId;
+        return "redirect:/sells/my/"+sellId;
     }
-    //나의 판매글 목록 페이지 Controller
+    // 나의 판매 목록 페이지 Controller
     @GetMapping("/my")
     public String findMySells(@Login Member loginMember, @RequestParam(defaultValue = "판매중") SellStatus sellStatus, Model model){
         List<SellDto> mySells = sellService.findMySells(loginMember.getId(),sellStatus);
@@ -68,6 +69,7 @@ public class SellController {
         return "sells/mySells";
     }
 
+    // 남의 판매 목록 페이지 Controller
     @GetMapping
     public String findSells(@Login Member loginMember, Model model){
         List<SellDto> mySells = sellService.findSells(loginMember.getId());
@@ -76,12 +78,36 @@ public class SellController {
         return "sells/sellList";
     }
 
+    @GetMapping("/other/{sellId}")
+    public String findOtherSells(@PathVariable Long sellId,
+                                 @RequestParam Long memberId,
+                                 @RequestParam(required = false) SellStatus sellStatus, Model model){
+        List<SellDto> sells = sellService.findOtherSells(sellId,memberId,sellStatus);
+        model.addAttribute("sells",sells);
+        return "sells/otherSells";
+    }
+
     //나의 판매글 상세 페이지 Controller
     @GetMapping("/my/{sellId}")
     public String mySellDetail(@PathVariable Long sellId, Model model){
-        MySellDetailDto mySell = sellService.findMySell(sellId);
+        SellDetailDto mySell = sellService.findMySell(sellId);
         model.addAttribute("sell",mySell);
         return "sells/mySellDetail";
+    }
+
+    // 남의 판매글 상세 페이지 Controller
+    @GetMapping("/{sellId}")
+    public String SellDetail(@PathVariable Long sellId, @RequestParam Long sellerId,
+                             @Login Member loginMember, Model model){
+        Map<String, Object> sellDetailMap = sellService.findSell(sellId, sellerId,loginMember);
+        model.addAttribute("sell", sellDetailMap.get("sell"));
+        model.addAttribute("otherSells", sellDetailMap.get("otherSells"));
+        if(sellDetailMap.get("sellLike") != null){
+            model.addAttribute("sellLikeBoolean",true);
+        }else{
+            model.addAttribute("sellLikeBoolean",false);
+        }
+        return "sells/sellDetail";
     }
 
     @GetMapping("/edit/{sellId}")

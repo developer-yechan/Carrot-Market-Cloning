@@ -73,11 +73,64 @@
             opacity: 1;
             background-color: #000;
         }
-        .user-info{
+        .member-info{
         display : flex;
         align-items : center;
         }
 
+        .otherSells {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .seller-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .seller-nickname {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .view-all-link {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #ccc;
+        }
+        
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .product-item {
+            display : flex;
+            flex-direction : column;
+            margin-bottom: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        
+        .product-title {
+            font-weight: bold;
+        }
+        
+        .product-price {
+            color: #888;
+        }
+        
+        .product-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
     </style>
 <body>
 
@@ -85,11 +138,8 @@
     <div class="bodyHeaderBox">
         <div th:replace="fragments/detailPageBodyHeader :: header"/>
         <div class="menu-box" id="menuBox">
-            <a th:href="@{/sells/edit/{sellId}(sellId=${sell.sellId})}">수정</a>
-            <form th:action="|/sells/${sell.sellId}|" method="post">
-                <input type="hidden" name="_method" value="DELETE"/>
-                <button type="submit">삭제</button>
-            </form>
+            <span>신고하기</span>
+            <span>이 사용자의 글 보지 않기</span>
         </div>
     </div>
     <div th:if="${sell.productImages.size()>0}" class="swiper-container">
@@ -101,22 +151,14 @@
         <div class="swiper-pagination"></div>
     </div>
 
-    <div class="user-info">
-        <img th:if="${sell.userImage != null}" th:src="${sell.userImage}" alt="유저 이미지" width="30px" height="30px">
-        <img th:if="${sell.userImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
+    <div class="member-info">
+        <img th:if="${sell.memberImage != null}" th:src="${sell.memberImage}" alt="유저 이미지" width="30px" height="30px">
+        <img th:if="${sell.memberImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
         <div>
-            <h5 th:text="${sell.userNickname}">닉네임</h5>
-            <span th:text="${sell.userPlace}">장소</span>
+            <h5 th:text="${sell.memberNickname}">닉네임</h5>
+            <span th:text="${sell.memberPlace}">장소</span>
         </div>
     </div>
-
-    <form id="statusForm" th:action="@{/sells/{sellId}/updateStatus(sellId=${sell.sellId})}" method="post">
-        <select name="sellStatus" th:onchange="|javascript:updateStatus()|">
-            <option value="판매중" th:selected="${sell.sellStatus.toString()}=='판매중'">판매중</option>
-            <option value="예약중" th:selected="${sell.sellStatus.toString()}=='예약중'">예약중</option>
-            <option value="판매완료" th:selected="${sell.sellStatus.toString()}=='판매완료'">판매완료</option>
-        </select>
-    </form>
 
     <h3 th:text="${sell.title}">제목</h3>
     <span th:text="${sell.category}">카테고리</span>
@@ -124,38 +166,55 @@
 
     <p th:text="${sell.content}">본문</p>
 
+    <div class="otherSells">
+        <div class="seller-info">
+            <span th:text="|${sell.memberNickname}님의 판매 상품|" class="seller-nickname">판매자 닉네임</span>
+            <a th:href="@{/sells/other/{sellId}?(sellId=${sell.sellId},memberId=${param.memberId})}" class="view-all-link">모두 보기</a>
+        </div>
 
-
+        <ul class="product-list">
+            <li class="product-item" th:each="otherSell : ${otherSells}" th:onclick="|javascript:goToSellDetail('${otherSell.sellId}','${otherSell.memberId}')|">
+                <img class="product-image" th:src="|/sells/images/${otherSell.productImages.get(0).getImageUrl()}|" width="100" height="100">
+                <span th:text="${otherSell.title}" class="product-title">상품 1</span>
+                <span th:text="|${otherSell.price}원|" class="product-price">가격: $10</span>
+            </li>
+        </ul>
+    </div>
 
     <div>
-        <span class="heart-icon" onclick="toggleHeart(this)">&#x2661;</span>
+        <form id="sellLikeForm" th:action="@{/sells/like/{sellId}(sellId=${sell.sellId},sellerId=${sell.memberId})}" method="post">
+            <span class="heart-icon" onclick="toggleHeart(this)" th:classappend="${sellLikeBoolean} ? filled">&#x2661;</span>
+        </form>
         <span th:text="|${sell.price}원|">상품 가격</span>
-        <button>대화 중인 채팅방</button>
+        <button>채팅하기</button>
     </div>
 </div>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
-        function updateStatus() {
-            var form = document.getElementById('statusForm');
-            // 선택한 상태 값을 전송하기 위해 숨겨진 input 요소 추가
+
+
+        function toggleHeart(icon) {
+           var form = document.getElementById('sellLikeForm');
+           if(icon.classList.contains('filled')){
+
+            // 관심 상태 값을 전송하기 위해 숨겨진 input 요소 추가
             var statusInput = document.createElement('input');
             statusInput.type = 'hidden';
             statusInput.name = '_method';
-            statusInput.value = 'patch';
-
+            statusInput.value = 'delete';
             form.appendChild(statusInput);
-
             form.submit();
-        }
-
-        function toggleHeart(icon) {
-            icon.classList.toggle('filled');
+            icon.classList.remove('filled');
+           }else{
+            form.submit();
+            icon.classList.add('filled');
+           }
         }
 
          // 홈버튼 클릭 이벤트
-        function goToSells(sellId) {
+        function goToSells() {
             // 판매글 목록 페이지 URL로 이동
-            window.location.href = '/sells/my'
+            window.location.href = '/sells'
         }
 
         // 메뉴 버튼 클릭 이벤트
@@ -175,6 +234,11 @@
                 clickable: true,
             },
         });
+
+            function goToSellDetail(sellId,memberId) {
+            // 판매글 상세 페이지 URL로 이동
+            window.location.href = `/sells/${sellId}` + `?memberId=${memberId}`;
+        }
 </script>
 </body>
 </html>

@@ -24,4 +24,8 @@ public class SellLike {
     @JoinColumn(name = "sell_id")
     private Sell sell;
 
+    public SellLike(Member member, Sell sell) {
+        this.member = member;
+        this.sell = sell;
+    }
 }

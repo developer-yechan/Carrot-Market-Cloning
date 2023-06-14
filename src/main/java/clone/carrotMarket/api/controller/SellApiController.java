@@ -2,7 +2,7 @@ package clone.carrotMarket.api.controller;
 
 import clone.carrotMarket.domain.*;
 import clone.carrotMarket.dto.EditSellDto;
-import clone.carrotMarket.dto.MySellDetailDto;
+import clone.carrotMarket.dto.SellDetailDto;
 import clone.carrotMarket.dto.SellDto;
 import clone.carrotMarket.file.FileStore;
 import clone.carrotMarket.repository.SellRepository;
@@ -30,9 +30,9 @@ public class SellApiController {
 
     //나의 판매글 상세페이지 Controller
     @GetMapping("/my/{sellId}")
-    public MySellDetailDto mySellDetail(@PathVariable Long sellId){
-        List<Sell> mySells = sellRepository.findMySellById(sellId);
-        List<MySellDetailDto> result = mySells.stream().map(mySell -> new MySellDetailDto(mySell))
+    public SellDetailDto mySellDetail(@PathVariable Long sellId){
+        List<Sell> mySells = sellRepository.findSellById(sellId);
+        List<SellDetailDto> result = mySells.stream().map(mySell -> new SellDetailDto(mySell))
                 .collect(Collectors.toList());
         return result.get(0);
     }

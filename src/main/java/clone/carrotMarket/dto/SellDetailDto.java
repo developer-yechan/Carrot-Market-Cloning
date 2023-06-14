@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
-public class MySellDetailDto {
+public class SellDetailDto {
     private Long sellId;
     private String title;
     private String content;
@@ -26,14 +26,15 @@ public class MySellDetailDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private String userNickname;
+    private Long memberId;
+    private String memberNickname;
 
-    private String userImage;
+    private String memberImage;
 
-    private String userPlace;
+    private String memberPlace;
 
 
-    public MySellDetailDto(Sell sell){
+    public SellDetailDto(Sell sell){
         sellId = sell.getId();
         title = sell.getTitle();
         content = sell.getContent();
@@ -48,9 +49,10 @@ public class MySellDetailDto {
         views = sell.getViews();
         createdAt = sell.getCreatedAt();
         updatedAt = sell.getUpdatedAt();
-        userNickname = sell.getMember().getNickname();
-        userImage = sell.getMember().getProfileImage();
-        userPlace = sell.getMember().getMyPlace().getPlace();
+        memberId = sell.getMember().getId();
+        memberNickname = sell.getMember().getNickname();
+        memberImage = sell.getMember().getProfileImage();
+        memberPlace = sell.getMember().getMyPlace().getPlace();
     }
 
 }

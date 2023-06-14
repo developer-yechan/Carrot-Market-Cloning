@@ -3,8 +3,6 @@ package clone.carrotMarket.repository;
 import clone.carrotMarket.domain.Member;
 import clone.carrotMarket.domain.Sell;
 import clone.carrotMarket.domain.SellStatus;
-import clone.carrotMarket.dto.EditSellDto;
-import clone.carrotMarket.dto.MySellDetailDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,20 +22,39 @@ public class SellRepository {
         em.persist(sell);
     }
 
-    // 나의 판매 글 상세페이지 조회
-    public List<Sell> findMySellById(Long sellId){
+    // 판매 글 상세페이지 조회
+    public List<Sell> findSellById(Long sellId){
         String query = "select distinct s from Sell s " +
                 "join fetch s.member m " +
                 "left join fetch s.productImages pi where s.id=:sellId";
         return em.createQuery(query,Sell.class).setParameter("sellId",sellId).getResultList();
     }
 
-    // 남의 판매 글 상세페이지 조회
-    public List<Member> findSellById(Long memberId){
-        String query = "select distinct m from Member m " +
-                "join fetch m.sell s " +
-                "where m.id=:memberId";
-        return em.createQuery(query, Member.class).setParameter("memberId",memberId).getResultList();
+    // 남의 판매 글 다른 판매 상품 조회
+//    public List<Sell> findOtherSells(Long sellId, Long memberId){
+//        Member member = em.find(Member.class, memberId);
+//        String query = "select distinct s from Sell s " +
+//                "left join fetch s.productImages pi " +
+//                "where s.id not in (:sellId) " +
+//                "and s.member = :member " +
+//                "and s.sellStatus not in ('판매완료')";
+//        return em.createQuery(query,Sell.class)
+//                .setParameter("sellId", sellId)
+//                .setParameter("member",member)
+//                .getResultList();
+//    }
+
+    // 남의 판매 글 다른 판매 상품 조회
+    public List<Sell> findOtherSells(Long sellId, Long sellerId, String filteringQuery, int maxResults){
+        String query = "select distinct s from Sell s " +
+                "join fetch s.member m " +
+                "left join fetch s.productImages pi where s.id not in (:sellId) " +
+                "and m.id = :sellerId " + filteringQuery;
+        return em.createQuery(query,Sell.class)
+                .setParameter("sellId", sellId)
+                .setParameter("sellerId",sellerId)
+                .setMaxResults(maxResults)
+                .getResultList();
     }
 
     // 나의 판매내역 페이지 조회

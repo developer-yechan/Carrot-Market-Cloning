@@ -1,11 +1,9 @@
 package clone.carrotMarket.service;
 
 import clone.carrotMarket.domain.*;
-import clone.carrotMarket.dto.CreateSellDto;
-import clone.carrotMarket.dto.EditSellDto;
-import clone.carrotMarket.dto.MySellDetailDto;
-import clone.carrotMarket.dto.SellDto;
+import clone.carrotMarket.dto.*;
 import clone.carrotMarket.file.FileStore;
+import clone.carrotMarket.repository.SellLikeRepository;
 import clone.carrotMarket.repository.SellRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 @Service
 public class SellService {
     private final SellRepository sellRepository;
+
+    private final SellLikeRepository sellLikeRepository;
 
     private final FileStore fileStore;
 
@@ -58,9 +60,9 @@ public class SellService {
         return sell.getId();
     }
 
-    public MySellDetailDto findMySell(Long sellId) {
-        List<Sell> mySells = sellRepository.findMySellById(sellId);
-        List<MySellDetailDto> result = mySells.stream().map(mySell -> new MySellDetailDto(mySell))
+    public SellDetailDto findMySell(Long sellId) {
+        List<Sell> mySells = sellRepository.findSellById(sellId);
+        List<SellDetailDto> result = mySells.stream().map(mySell -> new SellDetailDto(mySell))
                 .collect(Collectors.toList());
         return result.get(0);
     }
@@ -98,6 +100,35 @@ public class SellService {
     public List<SellDto> findSells(Long memberId) {
         List<Sell> sells = sellRepository.findSells(memberId);
         return sells.stream().map(mySell -> new SellDto(mySell))
+                .collect(Collectors.toList());
+    }
+
+    public Map<String, Object> findSell(Long sellId, Long sellerId, Member loginMember) {
+        List<Sell> sells = sellRepository.findSellById(sellId);
+        List<SellDetailDto> sellDetailDtos = sells.stream().map(sell -> new SellDetailDto(sell))
+                .collect(Collectors.toList());
+        String filteringQuery = "and s.sellStatus not in ('판매완료')";
+        List<Sell> otherSells = sellRepository.findOtherSells(sellId, sellerId,filteringQuery,4);
+        List<SellDto> otherSellDtos = otherSells.stream().map(sell -> new SellDto(sell))
+                .collect(Collectors.toList());
+        SellLike sellLike = sellLikeRepository.findLike(sellId, loginMember.getId());
+        Map<String, Object> sellDetailMap = new HashMap<>();
+        sellDetailMap.put("sell",sellDetailDtos.get(0));
+        sellDetailMap.put("otherSells", otherSellDtos);
+        sellDetailMap.put("sellLike",sellLike);
+
+        return sellDetailMap;
+    }
+
+    public List<SellDto> findOtherSells(Long sellId, Long memberId,SellStatus sellStatus) {
+        String filteringQuery = "";
+        if(sellStatus != SellStatus.판매완료 && sellStatus != null){
+            filteringQuery = "and s.sellStatus not in ('판매완료')";
+        }else if(sellStatus == SellStatus.판매완료){
+            filteringQuery = "and s.sellStatus in ('판매완료')";
+        }
+        List<Sell> sells = sellRepository.findOtherSells(sellId,memberId,filteringQuery,30);
+        return sells.stream().map(sell -> new SellDto(sell))
                 .collect(Collectors.toList());
     }
 }
