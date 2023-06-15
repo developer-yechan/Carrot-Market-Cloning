@@ -41,6 +41,12 @@ public class FileStore {
         return storeImages;
     }
 
+    public String storeProfileImage(MultipartFile imageFile) throws IOException {
+        String storeFileName = createStoreFileName(imageFile);
+        imageFile.transferTo(new File(getFullPath(storeFileName)));
+        return storeFileName;
+    }
+
     private String createStoreFileName(MultipartFile multipartFile) {
         String originalFilename = multipartFile.getOriginalFilename();
         int pos = originalFilename.lastIndexOf(".");

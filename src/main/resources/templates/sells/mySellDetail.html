@@ -95,7 +95,7 @@
 <div th:if="${sell.productImages.size()>0}" class="swiper-container">
     <div class="swiper-wrapper">
         <div class="swiper-slide" th:each="productImage : ${sell.productImages}">
-            <img  th:src="|/sells/images/${productImage.imageUrl}|" alt="상품 이미지" width="100%" height="100%">
+            <img  th:src="|/files/images/${productImage.imageUrl}|" alt="상품 이미지" width="100%" height="100%">
         </div>
     </div>
     <div class="swiper-pagination"></div>

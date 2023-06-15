@@ -3,6 +3,7 @@ package clone.carrotMarket.controller;
 import clone.carrotMarket.domain.Member;
 import clone.carrotMarket.domain.Place;
 import clone.carrotMarket.dto.CreateMemberDto;
+import clone.carrotMarket.dto.EditMemberDto;
 import clone.carrotMarket.dto.LoginDto;
 import clone.carrotMarket.repository.MemberRepository;
 import clone.carrotMarket.service.LoginService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @AllArgsConstructor
@@ -76,7 +78,8 @@ public class MemberController {
 
     @GetMapping("/myPage")
     public String myPage(@Login Member loginMember, Model model){
-        model.addAttribute("member",loginMember);
+        Member member = memberRepository.findMemberById(loginMember.getId());
+        model.addAttribute("member",member);
         return "members/myPage";
     }
 
@@ -87,6 +90,33 @@ public class MemberController {
             session.invalidate();
         }
         return "redirect:/members/login";
+    }
+
+    @GetMapping("/edit")
+    public String editMemberPage(@Login Member loginMember, Model model){
+        Member member = memberRepository.findMemberById(loginMember.getId());
+        EditMemberDto editMemberDto = new EditMemberDto();
+        editMemberDto.setId(member.getId());
+        editMemberDto.setNickname(member.getNickname());
+        editMemberDto.setProfileImage(member.getProfileImage());
+        model.addAttribute("member",editMemberDto);
+        return "members/editProfile";
+    }
+
+    @PatchMapping("/edit")
+    public String editMember(@Valid @ModelAttribute EditMemberDto editMemberDto,
+                             BindingResult bindingResult) throws IOException {
+        if(bindingResult.hasErrors()){
+            return "members/editProfile";
+        }
+        memberService.editMember(editMemberDto);
+        return "redirect:/members/myPage";
+    }
+
+    @PatchMapping("/deleteImage/{memberId}")
+    public String deleteProfileImage(@PathVariable Long memberId){
+        memberService.deleteProfileImage(memberId);
+        return "redirect:/members/myPage";
     }
 
 }

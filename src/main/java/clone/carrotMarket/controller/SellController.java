@@ -148,9 +148,9 @@ public class SellController {
         return "redirect:/sells/my";
     }
 
-    @ResponseBody
-    @GetMapping("/images/{filename}")
-    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
-        return new UrlResource("file:" + fileStore.getFullPath(filename));
-    }
+//    @ResponseBody
+//    @GetMapping("/images/{filename}")
+//    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
+//        return new UrlResource("file:" + fileStore.getFullPath(filename));
+//    }
 }

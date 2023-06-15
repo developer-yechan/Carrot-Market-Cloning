@@ -28,4 +28,9 @@ public class MemberRepository {
         return em.createQuery("select m from Member m where m.email=:email")
                 .setParameter("email", email).getResultList();
     }
+
+@Transactional(readOnly = true)
+    public Member findMemberById(Long memberId) {
+        return em.find(Member.class,memberId);
+    }
 }

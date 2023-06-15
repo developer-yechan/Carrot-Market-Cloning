@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+<style>
+            .menu-box {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            z-index: 2;
+        }
+
+        .menu-box.show {
+            display: block;
+        }
+        .editProfile{
+        display :flex;
+        flex-direction : column;
+        }
+        .button-group{
+        position : relative;
+        }
+
+</style>
+<body>
+<div class="container">
+  <form action="/members/edit" th:object="${member}" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="_method" value="patch"/>
+      <input type="hidden" th:field="*{id}"/>
+    <div class="editProfile">
+        <img th:if="${member.profileImage != null}" th:src="|/files/images/${member.profileImage}|" th:onclick="|javascript:displayMenu()|" alt="유저 이미지" width="30px" height="30px">
+        <img th:if="${member.profileImage == null}" th:src="|/image/basicProfile.png|" th:onclick="|javascript:displayMenu()|" alt="유저 이미지" width="30px" height="30px">
+        <div class="form-group">
+            <label th:for="nickname">닉네임</label>
+            <input type="text" th:field="*{nickname}" class="form-control"
+                   th:class="${#fields.hasErrors('nickname')}? 'form-control
+      fieldError' : 'form-control'">
+            <p class="field-error" th:if="${#fields.hasErrors('nickname')}"
+               th:errors="*{nickname}">Incorrect nickname</p>
+        </div>
+        <div class="button-group">
+            <button type="submit">완료</button>
+            <div class="menu-box" id="menuBox">
+                <input type="file" id="profileImage" th:field="*{imageFile}"
+                   class="form-control" >
+                <form  action="/members/edit" method="post">
+                </form>
+                <form th:action="|/members/deleteImage/${member.id}|" method="post">
+                    <input type="hidden" name="_method" value="patch"/>
+                    <button type="submit">삭제</button>
+                </form>
+            </div>
+        </div>
+    </div>
+  </form>
+</div>
+<script>
+            function displayMenu() {
+           var menu = document.getElementById('menuBox');
+           if(menu.classList.contains('show')){
+            menu.classList.remove('show');
+           }else{
+            menu.classList.add('show');
+           }
+        }
+</script>
+</body>
+</html>
