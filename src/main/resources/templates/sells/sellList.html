@@ -38,6 +38,11 @@
         display : flex;
         flex-direction : column;
         align-items : center;
+        text-decoration : none;
+        color : black;
+        }
+        .button.active{
+         background-color : #E2E2E2;
         }
 
     </style>
@@ -68,29 +73,23 @@
   </table>
 
   <div class="button-group">
-    <div th:onclick="|javascript:goToSells()|" class="button">
+    <a th:href="@{/sells}" class="button active">
       <i>&#8962;</i>
       <span>홈</span>
-    </div>
-    <div class="button">
+    </a>
+    <a th:href="@{/members/myPage}" class="button">
       <img th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
       <span>나의 당근</span>
-    </div>
-    <div class="addButton">
-      <a th:href="@{/sells/add}">
-        <img class="plus-image" th:src="|/image/plus.jpg|"/>
-      </a>
-    </div>
+    </a>
+    <a class="addButton" th:href="@{/sells/add}">
+      <img class="plus-image" th:src="|/image/plus.jpg|"/>
+    </a>
   </div>
 </div>
 <script>
         function goToSellDetail(sellId,memberId) {
             // 판매글 상세 페이지 URL로 이동
             window.location.href = `/sells/${sellId}` + `?sellerId=${memberId}`;
-        }
-         function goToSells() {
-            // 판매글 목록 페이지 URL로 이동
-            window.location.href = '/sells'
         }
     </script>
 </body>

@@ -2,6 +2,7 @@ package clone.carrotMarket.repository;
 
 import clone.carrotMarket.domain.Member;
 import clone.carrotMarket.domain.Sell;
+import clone.carrotMarket.domain.SellLike;
 import clone.carrotMarket.domain.SellStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -92,4 +94,16 @@ public class SellRepository {
         sell.setSellStatus(sellStatus);
         return sell;
     }
+
+//    public List<Sell> findLikeSells(List<SellLike> sellLikes, String filteringQuery){
+//        List<Long> sellLikeIds = sellLikes.stream().map(sellLike -> sellLike.getId())
+//                .collect(Collectors.toList());
+//        String query = "select distinct s from Sell s " +
+//                "join fetch s.member m " +
+//                "left join fetch s.productImages pi " +
+//                "where s.sellLikes.id in :sellLikeIds " + filteringQuery;
+//        return em.createQuery(query,Sell.class)
+//                .setParameter("sellLikes", sellLikes)
+//                .getResultList();
+//    }
 }

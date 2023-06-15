@@ -131,6 +131,14 @@
             height: auto;
             margin-bottom: 10px;
         }
+        .footer{
+        display : flex;
+        justify-content : space-between;
+        }
+        #sellLikeForm{
+        border-right : solid;
+        margin-right : 10px;
+        }
     </style>
 <body>
 
@@ -165,11 +173,13 @@
     <span th:text="${sell.createdAt}">게시 시간</span>
 
     <p th:text="${sell.content}">본문</p>
+    <span th:text="|관심 ${sell.sellLikeCnt}|">카테고리</span>
+    <span th:text="|조회 ${sell.views}|">게시 시간</span>
 
     <div class="otherSells">
         <div class="seller-info">
             <span th:text="|${sell.memberNickname}님의 판매 상품|" class="seller-nickname">판매자 닉네임</span>
-            <a th:href="@{/sells/other/{sellId}?(sellId=${sell.sellId},memberId=${param.memberId})}" class="view-all-link">모두 보기</a>
+            <a th:href="@{/sells/other/{sellId}?(sellId=${sell.sellId},memberId=${param.sellerId})}" class="view-all-link">모두 보기</a>
         </div>
 
         <ul class="product-list">
@@ -181,11 +191,13 @@
         </ul>
     </div>
 
-    <div>
-        <form id="sellLikeForm" th:action="@{/sells/like/{sellId}(sellId=${sell.sellId},sellerId=${sell.memberId})}" method="post">
-            <span class="heart-icon" onclick="toggleHeart(this)" th:classappend="${sellLikeBoolean} ? filled">&#x2661;</span>
-        </form>
-        <span th:text="|${sell.price}원|">상품 가격</span>
+    <div class="footer">
+        <div>
+            <form id="sellLikeForm" th:action="@{/sells/like/{sellId}(sellId=${sell.sellId},sellerId=${sell.memberId})}" method="post">
+                <span class="heart-icon" onclick="toggleHeart(this)" th:classappend="${sellLikeBoolean} ? filled">&#x2661;</span>
+            </form>
+            <span th:text="|${sell.price}원|">상품 가격</span>
+        </div>
         <button>채팅하기</button>
     </div>
 </div>

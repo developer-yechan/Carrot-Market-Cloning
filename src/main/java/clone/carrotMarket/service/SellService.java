@@ -50,18 +50,19 @@ public class SellService {
     }
 
     @Transactional
-    public Long save(CreateSellDto createSellDto, Member loginMember) throws IOException {
+    public Sell save(CreateSellDto createSellDto, Member loginMember) throws IOException {
         List<ProductImage> productImages = fileStore.storeImages(createSellDto.getImageFiles());
         Place place = new Place(createSellDto.getPlace(), createSellDto.getLatitude(), createSellDto.getLongitude());
         Sell sell = Sell.createSell(loginMember, productImages, createSellDto.getTitle(),
                 createSellDto.getContent(), createSellDto.getPrice(),
                 createSellDto.getCategory(),place);
         sellRepository.save(sell);
-        return sell.getId();
+        return sell;
     }
-
+    @Transactional
     public SellDetailDto findMySell(Long sellId) {
         List<Sell> mySells = sellRepository.findSellById(sellId);
+        mySells.get(0).setViews(mySells.get(0).getViews()+1);
         List<SellDetailDto> result = mySells.stream().map(mySell -> new SellDetailDto(mySell))
                 .collect(Collectors.toList());
         return result.get(0);
@@ -103,8 +104,10 @@ public class SellService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public Map<String, Object> findSell(Long sellId, Long sellerId, Member loginMember) {
         List<Sell> sells = sellRepository.findSellById(sellId);
+        sells.get(0).setViews(sells.get(0).getViews()+1);
         List<SellDetailDto> sellDetailDtos = sells.stream().map(sell -> new SellDetailDto(sell))
                 .collect(Collectors.toList());
         String filteringQuery = "and s.sellStatus not in ('판매완료')";

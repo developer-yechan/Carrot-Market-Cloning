@@ -58,8 +58,8 @@ public class SellController {
         if(loginMember == null){
             return "redirect:/members/login";
         }
-        Long sellId = sellService.save(createSellDto, loginMember);
-        return "redirect:/sells/my/"+sellId;
+        Sell sell = sellService.save(createSellDto, loginMember);
+        return "redirect:/sells/my/"+sell.getId();
     }
     // 나의 판매 목록 페이지 Controller
     @GetMapping("/my")

@@ -48,4 +48,16 @@ public class SellLikeRepository {
         }
         return sellLikes.get(0);
     }
+
+    public List<SellLike> findSellLikes(Long memberId, String filteringQuery) {
+        String query = "select sl from SellLike sl " +
+                "join fetch sl.sell s " +
+                "left join fetch s.productImages pi " +
+                "where sl.member.id=:memberId " +
+                filteringQuery;
+        List<SellLike> sellLikes = em.createQuery(query, SellLike.class)
+                .setParameter("memberId", memberId)
+                .getResultList();
+        return sellLikes;
+    }
 }

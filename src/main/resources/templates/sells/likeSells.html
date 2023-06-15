@@ -19,11 +19,11 @@
     </style>
 <body>
 <div class="container">
-<h3>판매 내역</h3>
+<h3>관심 목록</h3>
     <div>
-        <a th:href="@{/sells/other/{sellId}(sellId=__${sellId}__,memberId=${param.memberId})}">전체</a>
-        <a th:href="@{/sells/other/{sellId}(sellId=__${sellId}__,memberId=${param.memberId},sellStatus=판매중)}">판매중</a>
-        <a th:href="@{/sells/other/{sellId}(sellId=__${sellId}__,memberId=${param.memberId},sellStatus=판매완료)}">거래완료</a>
+        <a th:href="@{/sells/like/{memberId}(memberId=__${memberId}__)}">전체</a>
+        <a th:href="@{/sells/like/{memberId}(memberId=__${memberId}__,sellStatus=판매중)}">판매중</a>
+        <a th:href="@{/sells/like/{memberId}(memberId=__${memberId}__,sellStatus=판매완료)}">거래완료</a>
     </div>
 <table>
     <tr th:each="sell : ${sells}">
@@ -47,6 +47,7 @@
 </table>
 </div>
 <script>
+        
         function goToSellDetail(sellId,memberId) {
             // 판매글 상세 페이지 URL로 이동
             window.location.href = `/sells/${sellId}?memberId=${memberId}`;

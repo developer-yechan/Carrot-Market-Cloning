@@ -1,9 +1,6 @@
 package clone.carrotMarket.dto;
 
-import clone.carrotMarket.domain.Category;
-import clone.carrotMarket.domain.ImageRank;
-import clone.carrotMarket.domain.Sell;
-import clone.carrotMarket.domain.SellStatus;
+import clone.carrotMarket.domain.*;
 import lombok.Data;
 
 import java.util.List;
@@ -38,6 +35,22 @@ public class SellDto {
         chatRoomCnt = sell.getChatRooms().size();
         memberId = sell.getMember().getId();
         memberPlace = sell.getMember().getMyPlace().getPlace();
+    }
+
+    public SellDto(SellLike sellLike){
+        sellId = sellLike.getSell().getId();
+        title = sellLike.getSell().getTitle();
+        productImages = sellLike.getSell().getProductImages().stream()
+                .filter(productImage -> productImage.getImageRank().equals(ImageRank.대표))
+                .map(productImage ->
+                        new ProductImageDto(productImage))
+                .collect(Collectors.toList());
+        sellStatus = sellLike.getSell().getSellStatus();
+        sellLikeCnt = sellLike.getSell().getSellLikes().size();
+        price = sellLike.getSell().getPrice();
+        chatRoomCnt = sellLike.getSell().getChatRooms().size();
+        memberId = sellLike.getSell().getMember().getId();
+        memberPlace = sellLike.getSell().getMember().getMyPlace().getPlace();
     }
 
 }

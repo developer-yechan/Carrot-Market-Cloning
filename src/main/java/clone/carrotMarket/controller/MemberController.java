@@ -8,6 +8,7 @@ import clone.carrotMarket.repository.MemberRepository;
 import clone.carrotMarket.service.LoginService;
 import clone.carrotMarket.service.MemberService;
 import clone.carrotMarket.web.SessionConst;
+import clone.carrotMarket.web.argumentresolver.Login;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,6 +72,21 @@ public class MemberController {
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER,loginMember);
         return "redirect:/sells";
+    }
+
+    @GetMapping("/myPage")
+    public String myPage(@Login Member loginMember, Model model){
+        model.addAttribute("member",loginMember);
+        return "members/myPage";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session != null){
+            session.invalidate();
+        }
+        return "redirect:/members/login";
     }
 
 }

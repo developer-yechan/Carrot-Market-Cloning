@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header"/>
+
+  <style>
+        .profile-section {
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-edit {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        .logout{
+            padding: 10px;
+            text-align: center;
+            display : block;
+            margin : 0 auto;
+        }
+
+        .section {
+            display: flex;
+            flex-direction : column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .item {
+            text-align: center;
+            margin-right: 20px;
+        }
+       .button-group{
+        display : flex;
+        justify-content : space-around;
+        align-items : center;
+        position : relative;
+        }
+        .button{
+        display : flex;
+        flex-direction : column;
+        align-items : center;
+        text-decoration : none;
+        color : black;
+        }
+        button,a{
+        all : unset;
+        }
+        .button.active{
+         background-color : #E2E2E2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+  <h4>나의 당근</h4>
+  <div class="profile-section">
+    <img th:if="${member.profileImage != null}" th:src="${member.profileImage}" alt="유저 이미지" width="30px" height="30px">
+    <img th:if="${member.profileImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
+    <span class="nickname" th:text="${member.nickname}">닉네임</span>
+  </div>
+  <div class="profile-edit">
+    프로필 수정
+  </div>
+  <div class="section">
+    <a th:href="@{/sells/my}" class="item">
+      <i class="fas fa-book"></i>
+      판매내역
+    </a>
+    <a th:href="@{/sells/like/{memberId}(memberId=${member.id})}" class="item">
+      <i class="fas fa-heart"></i>
+      관심목록
+    </a>
+    <a th:href="@{/sells}" class="item">
+      <i class="fas fa-comment"></i>
+      채팅목록
+    </a>
+  </div>
+  <div>
+    <form th:action="@{/members/logout}" method="post">
+      <button class="logout" type="submit">
+        로그아웃
+      </button>
+    </form>
+  </div>
+  <div class="button-group">
+    <a th:href="@{/sells}" class="button">
+      <i>&#8962;</i>
+      <span>홈</span>
+    </a>
+    <a th:href="@{/members/myPage}" class="button active">
+      <img th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
+      <span>나의 당근</span>
+    </a>
+  </div>
+</div>
+</body>
+</html>
