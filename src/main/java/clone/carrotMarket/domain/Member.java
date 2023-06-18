@@ -26,9 +26,6 @@ public class Member {
     @OneToMany(mappedBy = "member",cascade = CascadeType.REMOVE)
     private List<SellLike> sellLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "purchaser",cascade = CascadeType.REMOVE)
-    private List<ChatRoom> chatRooms = new ArrayList<>();
-
     private String name;
 
     @Column(unique = true)

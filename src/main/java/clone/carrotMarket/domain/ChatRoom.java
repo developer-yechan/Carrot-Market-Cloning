@@ -18,12 +18,8 @@ public class ChatRoom {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "seller_id")
-    private Member seller;
-
-    @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "purchaser_id")
-    private Member purchaser;
+    @JoinColumn(name = "sender_id")
+    private Member sender;
 
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "sell_id")
@@ -31,4 +27,9 @@ public class ChatRoom {
 
     @OneToMany(mappedBy = "chatRoom",cascade = CascadeType.REMOVE)
     private List<ChatMessage> chatMessages = new ArrayList<>();
+
+    public ChatRoom(Member sender, Sell sell) {
+        this.sender = sender;
+        this.sell = sell;
+    }
 }

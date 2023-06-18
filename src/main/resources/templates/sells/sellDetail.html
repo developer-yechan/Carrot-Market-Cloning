@@ -139,6 +139,9 @@
         border-right : solid;
         margin-right : 10px;
         }
+        .likeAndPrice{
+        display : flex;
+        }
     </style>
 <body>
 
@@ -192,18 +195,19 @@
     </div>
 
     <div class="footer">
-        <div>
+        <div class="likeAndPrice">
             <form id="sellLikeForm" th:action="@{/sells/like/{sellId}(sellId=${sell.sellId},sellerId=${sell.memberId})}" method="post">
                 <span class="heart-icon" onclick="toggleHeart(this)" th:classappend="${sellLikeBoolean} ? filled">&#x2661;</span>
             </form>
             <span th:text="|${sell.price}원|">상품 가격</span>
         </div>
-        <button>채팅하기</button>
+        <form id="chatForm" th:action="@{/chat/room/{sellId}(sellId=${sell.sellId})}" method="post">
+        <button type="submit">채팅하기</button>
+        </form>
     </div>
 </div>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
-
 
         function toggleHeart(icon) {
            var form = document.getElementById('sellLikeForm');

@@ -20,11 +20,18 @@ public class ChatMessage {
     @JoinColumn(name = "chatRoom_id")
     private ChatRoom chatRoom;
 
-    @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "writer_id")
-    private Member writer;
+    //보내는 사람
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="member_id")
+    private Member sender;
 
     private String message;
 
     private LocalDateTime sendTime;
+
+    public ChatMessage(ChatRoom chatRoom, Member sender, String message) {
+        this.chatRoom = chatRoom;
+        this.sender = sender;
+        this.message = message;
+    }
 }

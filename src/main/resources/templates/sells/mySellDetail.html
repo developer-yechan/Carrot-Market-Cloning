@@ -5,6 +5,9 @@
         .heart-icon {
             color: #ccc;
             cursor: pointer;
+            border-right : 1px solid;
+            padding : 0 5px;
+            margin-right : 5px;
         }
 
         .heart-icon.filled {
@@ -78,60 +81,67 @@
         align-items : center;
         }
 
+        .footer{
+        display : flex;
+        justify-content : space-between;
+        }
+        .likeAndPrice{
+        display : flex;
+        }
+
     </style>
 <body>
 
 <div class="container">
-<div class="bodyHeaderBox">
-    <div th:replace="fragments/detailPageBodyHeader :: header"/>
-    <div class="menu-box" id="menuBox">
-        <a th:href="@{/sells/edit/{sellId}(sellId=${sell.sellId})}">수정</a>
-        <form th:action="|/sells/${sell.sellId}|" method="post">
-            <input type="hidden" name="_method" value="DELETE"/>
-            <button type="submit">삭제</button>
-        </form>
-    </div>
-</div>
-<div th:if="${sell.productImages.size()>0}" class="swiper-container">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide" th:each="productImage : ${sell.productImages}">
-            <img  th:src="|/files/images/${productImage.imageUrl}|" alt="상품 이미지" width="100%" height="100%">
+    <div class="bodyHeaderBox">
+        <div th:replace="fragments/detailPageBodyHeader :: header"/>
+        <div class="menu-box" id="menuBox">
+            <a th:href="@{/sells/edit/{sellId}(sellId=${sell.sellId})}">수정</a>
+            <form th:action="|/sells/${sell.sellId}|" method="post">
+                <input type="hidden" name="_method" value="DELETE"/>
+                <button type="submit">삭제</button>
+            </form>
         </div>
     </div>
-    <div class="swiper-pagination"></div>
-</div>
-
-<div class="member-info">
-    <img th:if="${sell.memberImage != null}" th:src="${sell.memberImage}" alt="유저 이미지" width="30px" height="30px">
-    <img th:if="${sell.memberImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
-    <div>
-        <h5 th:text="${sell.memberNickname}">닉네임</h5>
-        <span th:text="${sell.memberPlace}">장소</span>
+    <div th:if="${sell.productImages.size()>0}" class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" th:each="productImage : ${sell.productImages}">
+                <img  th:src="|/files/images/${productImage.imageUrl}|" alt="상품 이미지" width="100%" height="100%">
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
     </div>
-</div>
 
-<form id="statusForm" th:action="@{/sells/{sellId}/updateStatus(sellId=${sell.sellId})}" method="post">
-    <select name="sellStatus" th:onchange="|javascript:updateStatus()|">
-        <option value="판매중" th:selected="${sell.sellStatus.toString()}=='판매중'">판매중</option>
-        <option value="예약중" th:selected="${sell.sellStatus.toString()}=='예약중'">예약중</option>
-        <option value="판매완료" th:selected="${sell.sellStatus.toString()}=='판매완료'">판매완료</option>
-    </select>
-</form>
+    <div class="member-info">
+        <img th:if="${sell.memberImage != null}" th:src="|/files/images/${sell.memberImage}|" alt="유저 이미지" width="30px" height="30px">
+        <img th:if="${sell.memberImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
+        <div>
+            <h5 th:text="${sell.memberNickname}">닉네임</h5>
+            <span th:text="${sell.memberPlace}">장소</span>
+        </div>
+    </div>
 
-<h3 th:text="${sell.title}">제목</h3>
-<span th:text="${sell.category}">카테고리</span>
-<span th:text="${sell.createdAt}">게시 시간</span>
+    <form id="statusForm" th:action="@{/sells/{sellId}/updateStatus(sellId=${sell.sellId})}" method="post">
+        <select name="sellStatus" th:onchange="|javascript:updateStatus()|">
+            <option value="판매중" th:selected="${sell.sellStatus.toString()}=='판매중'">판매중</option>
+            <option value="예약중" th:selected="${sell.sellStatus.toString()}=='예약중'">예약중</option>
+            <option value="판매완료" th:selected="${sell.sellStatus.toString()}=='판매완료'">판매완료</option>
+        </select>
+    </form>
 
-<p th:text="${sell.content}">본문</p>
+    <h3 th:text="${sell.title}">제목</h3>
+    <span th:text="${sell.category}">카테고리</span>
+    <span th:text="${sell.createdAt}">게시 시간</span>
 
+    <p th:text="${sell.content}">본문</p>
 
-
-
-<div>
-    <span class="heart-icon" onclick="toggleHeart(this)">&#x2661;</span>
-    <span th:text="|${sell.price}원|">상품 가격</span>
-    <button>대화 중인 채팅방</button>
-</div>
+    <div class="footer">
+        <div class="likeAndPrice">
+            <span class="heart-icon" onclick="toggleHeart(this)">&#x2661;</span>
+            <span th:text="|${sell.price}원|">상품 가격</span>
+        </div>
+        <button>대화 중인 채팅방</button>
+    </div>
 </div>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 <script>
