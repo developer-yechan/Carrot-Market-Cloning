@@ -6,6 +6,7 @@ import clone.carrotMarket.dto.EditSellDto;
 import clone.carrotMarket.dto.SellDetailDto;
 import clone.carrotMarket.dto.SellDto;
 import clone.carrotMarket.file.FileStore;
+import clone.carrotMarket.service.ChatRoomService;
 import clone.carrotMarket.service.SellService;
 import clone.carrotMarket.web.argumentresolver.Login;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,8 @@ public class SellController {
 
     private final SellService sellService;
 
+    private final ChatRoomService chatRoomService;
+
 
     @ModelAttribute("categories")
     public List<Category> caategory() {
@@ -50,7 +53,7 @@ public class SellController {
     }
 
     @PostMapping("/add")
-    public String saveSell(@Valid @ModelAttribute CreateSellDto createSellDto, BindingResult result,
+    public String saveSell(@Valid @ModelAttribute("sell") CreateSellDto createSellDto, BindingResult result,
                            @Login Member loginMember, RedirectAttributes redirectAttributes) throws IOException {
         if(result.hasErrors()){
             return "sells/addForm";
@@ -100,8 +103,11 @@ public class SellController {
     public String SellDetail(@PathVariable Long sellId, @RequestParam Long sellerId,
                              @Login Member loginMember, Model model){
         Map<String, Object> sellDetailMap = sellService.findSell(sellId, sellerId,loginMember);
+        Long roomId = chatRoomService.findRoomId(sellId, loginMember.getId());
         model.addAttribute("sell", sellDetailMap.get("sell"));
         model.addAttribute("otherSells", sellDetailMap.get("otherSells"));
+        model.addAttribute("loginId",loginMember.getId());
+        model.addAttribute("roomId",roomId);
         if(sellDetailMap.get("sellLike") != null){
             model.addAttribute("sellLikeBoolean",true);
         }else{

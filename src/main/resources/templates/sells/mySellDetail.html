@@ -140,11 +140,21 @@
             <span class="heart-icon" onclick="toggleHeart(this)">&#x2661;</span>
             <span th:text="|${sell.price}원|">상품 가격</span>
         </div>
-        <button>대화 중인 채팅방</button>
+        <button th:onclick="|javascript:goToChatRoomList()|">대화 중인 채팅방</button>
     </div>
 </div>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-<script>
+<script th:inline="javascript">
+        function goToChatRoomList() {
+            var sellId = [[${sell.sellId}]];
+            var roomIds = [[${sell.roomIds}]];
+            if(roomIds.length>0){
+                 window.location.href = "/chat/rooms/"+sellId;
+            }else{
+            alert("대화 중인 채팅 방이 없습니다.");
+            }
+
+        }
         function updateStatus() {
             var form = document.getElementById('statusForm');
             // 선택한 상태 값을 전송하기 위해 숨겨진 input 요소 추가

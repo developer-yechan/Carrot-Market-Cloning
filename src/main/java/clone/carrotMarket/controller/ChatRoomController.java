@@ -18,15 +18,22 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(value = "/chat")
 @Log4j2
 public class ChatRoomController {
-    private final ChatRoomRepository repository;
-
     private final ChatRoomService chatRoomService;
 
-    //채팅방 목록 조회
-    @GetMapping(value = "/rooms")
+    //나의 채팅방 목록 조회
+    @GetMapping("/rooms")
     public String rooms(Model model,@Login Member loginMember){
         log.info("# All Chat Rooms");
         model.addAttribute("list",chatRoomService.findAllRooms(loginMember.getId()));
+        model.addAttribute("loginId",loginMember.getId());
+        return "chat/rooms";
+    }
+
+    // 상품 관련 채팅방 목록 조회
+    @GetMapping("/rooms/{sellId}")
+    public String roomsOfSell(@PathVariable Long sellId, @Login Member loginMember,
+                              Model model){
+        model.addAttribute("list",chatRoomService.findRoomsOfSell(sellId));
         model.addAttribute("loginId",loginMember.getId());
         return "chat/rooms";
     }
@@ -40,14 +47,6 @@ public class ChatRoomController {
         return "redirect:/chat/room/"+roomId;
     }
 
-//    @PostMapping(value = "/room")
-//    public String create(@RequestParam String name, RedirectAttributes rttr){
-//
-//        log.info("# Create Chat Room , name: " + name);
-//        rttr.addFlashAttribute("roomName", repository.createChatRoomDTO(name));
-//        return "redirect:/chat/rooms";
-//    }
-
     //채팅방 조회
     @GetMapping("/room/{roomId}")
     public String getRoom(@PathVariable Long roomId , @Login Member loginMember, Model model){
@@ -59,13 +58,4 @@ public class ChatRoomController {
         model.addAttribute("loginMember",loginMember);
         return "chat/room";
     }
-//    //채팅방 조회
-//    @GetMapping("/room")
-//    public void getRoom(Long roomId, Model model){
-//
-//        log.info("# get Chat Room, roomID : " + roomId);
-//        log.info("find room " + repository.findRoomById(roomId) );
-//
-//        model.addAttribute("room", repository.findRoomById(roomId));
-//    }
 }

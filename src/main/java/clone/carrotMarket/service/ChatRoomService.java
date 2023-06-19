@@ -90,6 +90,22 @@ public class ChatRoomService {
         return chatRoomDTOs;
     }
 
+    public Object findRoomsOfSell(Long sellId) {
+        List<ChatRoom> chatRooms = chatRoomRepository.findRoomsOfSell(sellId);
+        List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDTO(chatRoom))
+                .collect(Collectors.toList());
+        return chatRoomDTOs;
+    }
+
+    public Long findRoomId(Long sellId, Long senderId) {
+        List<ChatRoom> chatrooms = chatRoomRepository.findRoomId(sellId, senderId);
+        if(chatrooms.size()>0){
+            List<Long> roomIds = chatrooms.stream().map(chatRoom -> chatRoom.getId()).collect(Collectors.toList());
+            return roomIds.get(0);
+        }
+        return null;
+    }
+
 //    public ChatRoom createRoom(String name) {
 //        ChatRoom chatRoom = ChatRoom.create(name);
 //        chatRooms.put(chatRoom.getRoomId(), chatRoom);
