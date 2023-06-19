@@ -83,6 +83,13 @@ public class ChatRoomService {
         chatMessageRepository.save(chatMessage);
     }
 
+    public List<ChatRoomDTO> findAllRooms(Long memberId) {
+        List<ChatRoom> chatRooms = chatRoomRepository.findAll(memberId);
+        List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDTO(chatRoom))
+                .collect(Collectors.toList());
+        return chatRoomDTOs;
+    }
+
 //    public ChatRoom createRoom(String name) {
 //        ChatRoom chatRoom = ChatRoom.create(name);
 //        chatRooms.put(chatRoom.getRoomId(), chatRoom);

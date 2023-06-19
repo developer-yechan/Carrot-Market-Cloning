@@ -53,6 +53,20 @@ public class ChatRoomRepository {
                 .setParameter("roomId",roomId)
                 .getResultList();
     }
+
+    public List<ChatRoom> findAll(Long memberId) {
+        String query = "select distinct cr from ChatRoom cr " +
+                "join fetch cr.sender sd " +
+                "join fetch cr.sell s " +
+                "left join fetch cr.chatMessages cm " +
+                "where s.member.id=:sellerId " +
+                "or cr.sender.id=:senderId";
+        return em.createQuery(query,ChatRoom.class)
+                .setParameter("sellerId",memberId)
+                .setParameter("senderId",memberId)
+                .getResultList();
+
+    }
 //    public ChatRoomDTO createChatRoomDTO(String name){
 //        ++sequence;
 //        ChatRoomDTO room = ChatRoomDTO.create(name,sequence);

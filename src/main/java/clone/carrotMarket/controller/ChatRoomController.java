@@ -23,12 +23,13 @@ public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
     //채팅방 목록 조회
-//    @GetMapping(value = "/rooms")
-//    public String rooms(Model model){
-//        log.info("# All Chat Rooms");
-//        model.addAttribute("list",repository.findAllRooms());
-//        return "chat/rooms";
-//    }
+    @GetMapping(value = "/rooms")
+    public String rooms(Model model,@Login Member loginMember){
+        log.info("# All Chat Rooms");
+        model.addAttribute("list",chatRoomService.findAllRooms(loginMember.getId()));
+        model.addAttribute("loginId",loginMember.getId());
+        return "chat/rooms";
+    }
 
     //채팅방 개설
     @PostMapping(value = "/room/{sellId}")
