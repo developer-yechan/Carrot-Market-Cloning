@@ -163,7 +163,7 @@
     </div>
 
     <div class="member-info">
-        <img th:if="${sell.memberImage != null}" th:src="${sell.memberImage}" alt="유저 이미지" width="30px" height="30px">
+        <img th:if="${sell.memberImage != null}" th:src="|/files/images/${sell.memberImage}|" alt="유저 이미지" width="30px" height="30px">
         <img th:if="${sell.memberImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
         <div>
             <h5 th:text="${sell.memberNickname}">닉네임</h5>

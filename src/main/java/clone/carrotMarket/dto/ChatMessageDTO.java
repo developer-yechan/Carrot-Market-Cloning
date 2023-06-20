@@ -19,7 +19,7 @@ public class ChatMessageDTO {
     public  ChatMessageDTO(ChatMessage chatMessage) {
         roomId = chatMessage.getChatRoom().getId();
         senderId = chatMessage.getSender().getId();
-        sender = chatMessage.getSender().getName();
+        sender = chatMessage.getSender().getNickname();
         message = chatMessage.getMessage();
     }
 }

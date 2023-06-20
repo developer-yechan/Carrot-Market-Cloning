@@ -20,6 +20,10 @@ public class ChatRoomDTO {
     private String sellerImage;
 
     private String sellerNickname;
+
+    private Long sellId;
+
+    private String sellTitle;
     private SellStatus sellStatus;
     private int price;
     private ProductImageDto productImage;
@@ -27,7 +31,7 @@ public class ChatRoomDTO {
     private String senderImage;
     private String senderNickname;
 
-    private List<ChatMessage> chatMessages;
+    private List<ChatMessageDTO> chatMessages;
 
     public ChatRoomDTO(ChatRoom chatRoom) {
         id = chatRoom.getId();
@@ -38,6 +42,8 @@ public class ChatRoomDTO {
 
         }
         sellerNickname = chatRoom.getSell().getMember().getNickname();
+        sellId = chatRoom.getSell().getId();
+        sellTitle = chatRoom.getSell().getTitle();
         sellStatus = chatRoom.getSell().getSellStatus();
         price = chatRoom.getSell().getPrice();
         if(chatRoom.getSell().getProductImages().size()>0){
@@ -51,7 +57,9 @@ public class ChatRoomDTO {
         }
         senderNickname = chatRoom.getSender().getNickname();
         if(chatRoom.getChatMessages().size()>0){
-            chatMessages = chatRoom.getChatMessages();
+            chatMessages = chatRoom.getChatMessages().stream()
+                    .map(chatMessage -> new ChatMessageDTO(chatMessage))
+                    .collect(Collectors.toList());
         }
     }
 }
