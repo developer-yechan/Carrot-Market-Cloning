@@ -97,14 +97,14 @@
                        if(writer === username){
                            str = "<div class='message'>";
                             if(writer === seller && sellerImage){
-                            consoele.log(1);
+
                                str += "<img src='/files/images/'" + sellerImage + " alt='유저 이미지' width='20px' height='20px'>"
                            }
                            else if(writer === sender && senderImage){
-                           console.log(2);
+
                            str += "<img src='/files/images/'" + senderImage + " alt='유저 이미지' width='20px' height='20px'>"
                            }else{
-                           console.log(3);
+
                            str += "<img src='/image/basicProfile.png' alt='유저 이미지' width='20px' height='20px'>"
                            }
                            str += "<div class='alert alert-warning'>";
@@ -115,14 +115,13 @@
                        else{
                            str = "<div class='message partner'>";
                             if(writer === seller && sellerImage){
-                            consoele.log(1);
+
                                str += "<img src='/files/images/'" + sellerImage + " alt='유저 이미지' width='20px' height='20px'>"
                            }
                            else if(writer === sender && senderImage){
-                           console.log(2);
+
                            str += "<img src='/files/images/'" + senderImage + " alt='유저 이미지' width='20px' height='20px'>"
                            }else{
-                           console.log(3);
                            str += "<img src='/image/basicProfile.png' alt='유저 이미지' width='20px' height='20px'>"
                            }
                            str += "<div class='alert alert-secondary'>";

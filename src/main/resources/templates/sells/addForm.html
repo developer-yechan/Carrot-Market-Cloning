@@ -15,7 +15,10 @@
                    multiple="multiple" class="form-control" >
         </div>
         <div>
-            <input type="text" id="title" th:field="*{title}" class="form-control" placeholder="제목">
+            <input type="text" id="title" th:field="*{title}"
+                   th:class="${#fields.hasErrors('title')}? 'form-control fieldError' : 'form-control'" placeholder="제목">
+            <p class="field-error" th:if="${#fields.hasErrors('title')}"
+               th:errors="*{title}">Incorrect title</p>
         </div>
         <div>
             <select th:field="*{category}" class="form-select">
@@ -25,15 +28,21 @@
             </select>
         </div>
         <div>
-            <input type="text" id="price" th:field="*{price}" class="form-control" placeholder="가격(원)">
+            <input type="text" id="price" th:field="*{price}" th:class="${#fields.hasErrors('price')}? 'form-control fieldError' : 'form-control'" placeholder="가격(원)">
+            <p class="field-error" th:if="${#fields.hasErrors('price')}"
+               th:errors="*{price}">Incorrect price</p>
         </div>
         <div>
-            <textarea id="content" th:field="*{content}" class="form-control"
+            <textarea id="content" th:field="*{content}" th:class="${#fields.hasErrors('content')}? 'form-control fieldError' : 'form-control'"
                placeholder="게시글 내용을 작성해주세요. 가짜 품목 및 판매금지품목은 게시가 제한됩니다.">
             </textarea>
+            <p class="field-error" th:if="${#fields.hasErrors('content')}"
+               th:errors="*{content}">Incorrect content</p>
         </div>
         <div>
-            <input type="text" id="tradePlace" th:field="*{place}" class="form-control" placeholder="거래 희망 장소">
+            <input type="text" id="tradePlace" th:field="*{place}" th:class="${#fields.hasErrors('place')}? 'form-control fieldError' : 'form-control'" placeholder="거래 희망 장소">
+            <p class="field-error" th:if="${#fields.hasErrors('place')}"
+               th:errors="*{place}">Incorrect place</p>
             <input type="hidden" id="latitude" th:field="*{latitude}" th:value="0" class="form-control">
             <input type="hidden" id="longitude" th:field="*{longitude}" th:value="0" class="form-control">
         </div>
