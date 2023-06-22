@@ -16,7 +16,6 @@ public class Purchase {
     private Long id;
 
     @OneToOne(mappedBy = "purchase",fetch = FetchType.LAZY)
-    @JoinColumn(name = "sell_id")
     private Sell sell;
 
     @ManyToOne(fetch = FetchType.LAZY)

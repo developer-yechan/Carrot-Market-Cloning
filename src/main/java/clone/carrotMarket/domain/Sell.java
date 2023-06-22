@@ -31,7 +31,8 @@ public class Sell {
     @OneToMany(mappedBy = "sell",cascade = CascadeType.REMOVE,orphanRemoval = true)
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "purchase_id")
     private Purchase purchase;
     private String title;
     private String content;
