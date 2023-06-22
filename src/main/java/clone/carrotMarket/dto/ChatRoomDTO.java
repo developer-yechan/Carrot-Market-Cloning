@@ -56,26 +56,8 @@ public class ChatRoomDTO {
             senderImage = chatRoom.getSender().getProfileImage();
         }
         senderNickname = chatRoom.getSender().getNickname();
-        if(chatRoom.getChatMessages().size()>0){
-            chatMessages = chatRoom.getChatMessages().stream()
-                    .map(chatMessage -> new ChatMessageDTO(chatMessage))
-                    .collect(Collectors.toList());
-        }
+        chatMessages = chatRoom.getChatMessages().stream()
+                .map(chatMessage -> new ChatMessageDTO(chatMessage))
+                .collect(Collectors.toList());
     }
 }
-
-//public class ChatRoomDTO {
-//    private Long roomId;
-//    private String name;
-////    private Set<WebSocketSession> sessions = new HashSet<>();
-//    //WebSocketSession은 Spring에서 Websocket Connection이 맺어진 세션
-//
-//    public static ChatRoomDTO create(String name,Long sequence){
-//        System.out.println("name = " + name);
-//        ChatRoomDTO room = new ChatRoomDTO();
-//
-//        room.roomId = sequence;
-//        room.name = name;
-//        return room;
-//    }
-//}

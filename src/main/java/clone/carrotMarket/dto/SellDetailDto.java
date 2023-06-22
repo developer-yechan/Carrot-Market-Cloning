@@ -54,11 +54,9 @@ public class SellDetailDto {
         memberNickname = sell.getMember().getNickname();
         memberImage = sell.getMember().getProfileImage();
         memberPlace = sell.getMember().getMyPlace().getPlace();
-        if(sell.getChatRooms().size()>0){
-            roomIds = sell.getChatRooms().stream()
-                    .map(chatRoom -> chatRoom.getId())
-                    .collect(Collectors.toList());
-        }
+        roomIds = sell.getChatRooms().stream()
+                .map(chatRoom -> chatRoom.getId())
+                .collect(Collectors.toList());
     }
 
 }

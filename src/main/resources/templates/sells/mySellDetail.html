@@ -148,6 +148,7 @@
         function goToChatRoomList() {
             var sellId = [[${sell.sellId}]];
             var roomIds = [[${sell.roomIds}]];
+            console.log(roomIds,234234)
             if(roomIds.length>0){
                  window.location.href = "/chat/rooms/"+sellId;
             }else{
