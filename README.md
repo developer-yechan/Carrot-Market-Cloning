@@ -17,6 +17,10 @@
 IT 프로젝트 플랫폼 numble에서 주최한 'Spring, Spring Boot로 당근마켓 초기버전 클론코딩하기'에 참여하여  
 개발 요구 사항 및 와이어프레임을 제공 받아 구현한 결과물입니다.
 
+### 배포 URL
+http://54.180.41.136:8080/members/signup  
+// 현재 S3 파일 업로드 작업 중, 그 외 기능 동작
+
 ## ERD
 
 ![image](https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/33354e69-0404-4df9-b073-ec642592dd51)
