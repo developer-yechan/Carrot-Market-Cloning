@@ -106,14 +106,14 @@
     <div th:if="${sell.productImages.size()>0}" class="swiper-container">
         <div class="swiper-wrapper">
             <div class="swiper-slide" th:each="productImage : ${sell.productImages}">
-                <img  th:src="|/files/images/${productImage.imageUrl}|" alt="상품 이미지" width="100%" height="100%">
+                <img  th:src="${productImage.imageUrl}" alt="상품 이미지" width="100%" height="100%">
             </div>
         </div>
         <div class="swiper-pagination"></div>
     </div>
 
     <div class="member-info">
-        <img th:if="${sell.memberImage != null}" th:src="|/files/images/${sell.memberImage}|" alt="유저 이미지" width="30px" height="30px">
+        <img th:if="${sell.memberImage != null}" th:src="${sell.memberImage}" alt="유저 이미지" width="30px" height="30px">
         <img th:if="${sell.memberImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
         <div>
             <h5 th:text="${sell.memberNickname}">닉네임</h5>
@@ -148,7 +148,6 @@
         function goToChatRoomList() {
             var sellId = [[${sell.sellId}]];
             var roomIds = [[${sell.roomIds}]];
-            console.log(roomIds,234234)
             if(roomIds.length>0){
                  window.location.href = "/chat/rooms/"+sellId;
             }else{

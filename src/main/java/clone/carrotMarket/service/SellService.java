@@ -2,15 +2,18 @@ package clone.carrotMarket.service;
 
 import clone.carrotMarket.domain.*;
 import clone.carrotMarket.dto.*;
-import clone.carrotMarket.file.FileStore;
+//import clone.carrotMarket.file.FileStore;
+import clone.carrotMarket.file.S3Upload;
 import clone.carrotMarket.repository.SellLikeRepository;
 import clone.carrotMarket.repository.SellRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,14 +27,17 @@ public class SellService {
 
     private final SellLikeRepository sellLikeRepository;
 
-    private final FileStore fileStore;
+//    private final FileStore fileStore;
+
+    private final S3Upload s3Upload;
 
     @Transactional
     public Long update(EditSellDto editSellDto) throws IOException {
         List<Sell> mySells = sellRepository.findMySimpleSellById(editSellDto.getSellId());
         Sell mySell = mySells.get(0);
         if(StringUtils.hasText(editSellDto.getImageFiles().get(0).getOriginalFilename())){
-            List<ProductImage> productImages = fileStore.storeImages(editSellDto.getImageFiles());
+//            List<ProductImage> productImages = fileStore.storeImages(editSellDto.getImageFiles());
+            List<ProductImage> productImages = s3Upload.getProductImages(editSellDto.getImageFiles());
             mySell.getProductImages().clear();
             for (ProductImage productImage : productImages) {
                 mySell.addProductImage(productImage);
@@ -51,7 +57,8 @@ public class SellService {
 
     @Transactional
     public Sell save(CreateSellDto createSellDto, Member loginMember) throws IOException {
-        List<ProductImage> productImages = fileStore.storeImages(createSellDto.getImageFiles());
+//        List<ProductImage> productImages = fileStore.storeImages(createSellDto.getImageFiles());
+        List<ProductImage> productImages = s3Upload.getProductImages(createSellDto.getImageFiles());
         Place place = new Place(createSellDto.getPlace(), createSellDto.getLatitude(), createSellDto.getLongitude());
         Sell sell = Sell.createSell(loginMember, productImages, createSellDto.getTitle(),
                 createSellDto.getContent(), createSellDto.getPrice(),
@@ -59,6 +66,9 @@ public class SellService {
         sellRepository.save(sell);
         return sell;
     }
+
+
+
     @Transactional
     public SellDetailDto findMySell(Long sellId) {
         List<Sell> mySells = sellRepository.findSellById(sellId);

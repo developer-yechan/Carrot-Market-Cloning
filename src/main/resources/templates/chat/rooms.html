@@ -34,11 +34,11 @@
           <li>
               <a class="room-info" th:href="@{/chat/room/{roomId}(roomId=${room.id})}">
                   <div th:if="${room.sellerId} == ${loginId} and ${room.senderImage != null}" class="member-info">
-                      <img th:src="|/files/images/${room.senderImage}|" alt="유저 이미지" width="30px" height="30px">
+                      <img th:src="${room.senderImage}" alt="유저 이미지" width="30px" height="30px">
                       <span th:text="${room.senderNickname}">발신자 닉네임</span>
                   </div>
                   <div th:if="${room.senderId} == ${loginId} and ${room.sellerImage != null}" class="member-info">
-                      <img th:src="|/files/images/${room.sellerImage}|" alt="유저 이미지" width="30px" height="30px">
+                      <img th:src="${room.sellerImage}" alt="유저 이미지" width="30px" height="30px">
                       <span th:text="${room.sellerNickname}">판매자 닉네임</span>
                   </div>
                   <div th:if="${room.sellerId} == ${loginId} and ${room.senderImage == null}" class="member-info">
@@ -51,7 +51,7 @@
                   </div>
                   <p th:if="${room.chatMessages.size()>0}" th:text="${room.chatMessages.get(room.chatMessages.size()-1).message}"></p>
                   <div class="sell">
-                      <img th:if="${room.productImage != null}" th:src="|/files/images/${room.productImage.getImageUrl()}|" width="100" height="100" />
+                      <img th:if="${room.productImage != null}" th:src="${room.productImage.getImageUrl()}" width="100" height="100" />
                       <img th:if="${room.productImage == null}" th:src="|/image/noImage.jpg|" width="100" height="100" />
                       <span th:if="${room.sellStatus.toString()} == '판매완료' and __${sellId}__ == null">거래완료</span>
                   </div>

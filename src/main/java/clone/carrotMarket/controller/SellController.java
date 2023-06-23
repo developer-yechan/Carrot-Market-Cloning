@@ -5,7 +5,7 @@ import clone.carrotMarket.dto.CreateSellDto;
 import clone.carrotMarket.dto.EditSellDto;
 import clone.carrotMarket.dto.SellDetailDto;
 import clone.carrotMarket.dto.SellDto;
-import clone.carrotMarket.file.FileStore;
+//import clone.carrotMarket.file.FileStore;
 import clone.carrotMarket.service.ChatRoomService;
 import clone.carrotMarket.service.SellService;
 import clone.carrotMarket.web.argumentresolver.Login;
@@ -30,7 +30,7 @@ import java.util.Map;
 @AllArgsConstructor
 @RequestMapping("/sells")
 public class SellController {
-    private final FileStore fileStore;
+//    private final FileStore fileStore;
 
     private final SellService sellService;
 

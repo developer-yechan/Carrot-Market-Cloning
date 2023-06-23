@@ -3,7 +3,7 @@ package clone.carrotMarket.dto;
 import clone.carrotMarket.domain.Category;
 import clone.carrotMarket.domain.ProductImage;
 import clone.carrotMarket.domain.Sell;
-import clone.carrotMarket.file.FileStore;
+//import clone.carrotMarket.file.FileStore;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 

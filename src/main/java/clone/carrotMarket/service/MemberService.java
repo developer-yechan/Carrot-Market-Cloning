@@ -3,7 +3,8 @@ package clone.carrotMarket.service;
 import clone.carrotMarket.domain.Member;
 import clone.carrotMarket.domain.ProductImage;
 import clone.carrotMarket.dto.EditMemberDto;
-import clone.carrotMarket.file.FileStore;
+//import clone.carrotMarket.file.FileStore;
+import clone.carrotMarket.file.S3Upload;
 import clone.carrotMarket.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final FileStore fileStore;
+//    private final FileStore fileStore;
+    private final S3Upload s3Upload;
 
     @Transactional
     public Long signUp(Member member){
@@ -40,14 +42,12 @@ public class MemberService {
     @Transactional
     public void editMember(EditMemberDto editMemberDto) throws IOException {
         Member member = memberRepository.findMemberById(editMemberDto.getId());
-
         if(StringUtils.hasText(editMemberDto.getImageFile().getOriginalFilename())){
-            String storeFileName = fileStore.storeProfileImage(editMemberDto.getImageFile());
+//          String storeFileName = fileStore.storeProfileImage(editMemberDto.getImageFile());
+            String storeFileName = s3Upload.upload(editMemberDto.getImageFile(),"profile");
             member.setProfileImage(storeFileName);
         }
       member.setNickname(editMemberDto.getNickname());
-
-
     }
     @Transactional
     public void deleteProfileImage(Long memberId){

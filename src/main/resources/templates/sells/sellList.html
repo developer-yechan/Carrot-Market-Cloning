@@ -53,7 +53,7 @@
   <table>
     <tr th:each="sell : ${sells}">
       <td th:onclick="|javascript:goToSellDetail('${sell.sellId}','${sell.memberId}')|">
-        <img th:if="${sell.productImages.size()>0}" th:src="|/files/images/${sell.productImages.get(0).getImageUrl()}|" width="100" height="100" />
+        <img th:if="${sell.productImages.size()>0}" th:src="${sell.productImages.get(0).getImageUrl()}" width="100" height="100" />
         <img th:unless="${sell.productImages.size()>0}" th:src="|/image/noImage.jpg|" width="100" height="100" />
       </td>
       <td th:onclick="|javascript:goToSellDetail('${sell.sellId}','${sell.memberId}')|">
