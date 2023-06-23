@@ -30,7 +30,7 @@ public class SellService {
     public Long update(EditSellDto editSellDto) throws IOException {
         List<Sell> mySells = sellRepository.findMySimpleSellById(editSellDto.getSellId());
         Sell mySell = mySells.get(0);
-        if(editSellDto.getImageFiles() != null){
+        if(StringUtils.hasText(editSellDto.getImageFiles().get(0).getOriginalFilename())){
             List<ProductImage> productImages = fileStore.storeImages(editSellDto.getImageFiles());
             mySell.getProductImages().clear();
             for (ProductImage productImage : productImages) {
