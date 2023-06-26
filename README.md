@@ -18,8 +18,8 @@ IT 프로젝트 플랫폼 numble에서 주최한 'Spring, Spring Boot로 당근�
 개발 요구 사항 및 와이어프레임을 제공 받아 구현한 결과물입니다.
 
 ### 배포 URL
-http://54.180.41.136:8080/members/signup  
-// 현재 S3 파일 업로드 작업 중, 그 외 기능 동작
+http://54.180.41.136:8080/members/login  
+(id: abc@naver.com, pw: 123 으로 로그인 가능)
 
 ## ERD
 
