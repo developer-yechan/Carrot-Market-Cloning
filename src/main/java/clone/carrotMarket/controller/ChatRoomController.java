@@ -13,6 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(value = "/chat")
@@ -43,17 +47,24 @@ public class ChatRoomController {
     public String create(@PathVariable Long sellId, @Login Member loginMember){
         Long senderId = loginMember.getId();
         log.info("# Create Chat Room , senderId: " + senderId);
+        Long chatRoomId = chatRoomService.findRoomId(sellId, loginMember.getId());
+        if(chatRoomId != null){
+            return "redirect:/chat/room/"+chatRoomId;
+        }
         Long roomId = chatRoomService.createRoom(sellId, senderId);
         return "redirect:/chat/room/"+roomId;
     }
 
     //채팅방 조회
     @GetMapping("/room/{roomId}")
-    public String getRoom(@PathVariable Long roomId , @Login Member loginMember, Model model){
+    public String getRoom(@PathVariable Long roomId , @Login Member loginMember,
+                          Model model, HttpServletResponse response) throws IOException {
 
         log.info("# get Chat Room, roomID : " + roomId);
         ChatRoomDTO chatRoomDTO = chatRoomService.findRoom(roomId);
-
+        if(loginMember.getId() != chatRoomDTO.getSellerId() && loginMember.getId() != chatRoomDTO.getSenderId()){
+            response.sendError(403, "잘못된 요청입니다.");
+        }
         model.addAttribute("room", chatRoomDTO);
         model.addAttribute("loginMember",loginMember);
         return "chat/room";

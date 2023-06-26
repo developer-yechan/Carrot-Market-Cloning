@@ -32,19 +32,6 @@ public class SellRepository {
         return em.createQuery(query,Sell.class).setParameter("sellId",sellId).getResultList();
     }
 
-    // 남의 판매 글 다른 판매 상품 조회
-//    public List<Sell> findOtherSells(Long sellId, Long memberId){
-//        Member member = em.find(Member.class, memberId);
-//        String query = "select distinct s from Sell s " +
-//                "left join fetch s.productImages pi " +
-//                "where s.id not in (:sellId) " +
-//                "and s.member = :member " +
-//                "and s.sellStatus not in ('판매완료')";
-//        return em.createQuery(query,Sell.class)
-//                .setParameter("sellId", sellId)
-//                .setParameter("member",member)
-//                .getResultList();
-//    }
 
     // 남의 판매 글 다른 판매 상품 조회
     public List<Sell> findOtherSells(Long sellId, Long sellerId, String filteringQuery, int maxResults){
@@ -95,15 +82,4 @@ public class SellRepository {
         return sell;
     }
 
-//    public List<Sell> findLikeSells(List<SellLike> sellLikes, String filteringQuery){
-//        List<Long> sellLikeIds = sellLikes.stream().map(sellLike -> sellLike.getId())
-//                .collect(Collectors.toList());
-//        String query = "select distinct s from Sell s " +
-//                "join fetch s.member m " +
-//                "left join fetch s.productImages pi " +
-//                "where s.sellLikes.id in :sellLikeIds " + filteringQuery;
-//        return em.createQuery(query,Sell.class)
-//                .setParameter("sellLikes", sellLikes)
-//                .getResultList();
-//    }
 }

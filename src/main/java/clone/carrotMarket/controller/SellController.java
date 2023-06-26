@@ -61,6 +61,7 @@ public class SellController {
         if(loginMember == null){
             return "redirect:/members/login";
         }
+
         Sell sell = sellService.save(createSellDto, loginMember);
         return "redirect:/sells/my/"+sell.getId();
     }

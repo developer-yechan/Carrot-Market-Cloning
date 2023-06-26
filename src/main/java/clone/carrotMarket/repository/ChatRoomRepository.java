@@ -13,31 +13,8 @@ import javax.persistence.EntityManager;
 @Repository
 @AllArgsConstructor
 public class ChatRoomRepository {
-
-//    private Map<Long, ChatRoomDTO> chatRoomDTOMap;
-//
-//    private static long sequence = 0L;
-
     private final EntityManager em;
 
-
-//    @PostConstruct
-//    private void init(){
-//        chatRoomDTOMap = new LinkedHashMap<>();
-//    }
-//
-//    public List<ChatRoomDTO> findAllRooms(){
-//        //채팅방 생성 순서 최근 순으로 반환
-//        List<ChatRoomDTO> result = new ArrayList<>(chatRoomDTOMap.values());
-//        Collections.reverse(result);
-//
-//        return result;
-//    }
-//
-//    public ChatRoomDTO findRoomById(Long id){
-//        System.out.println("chatRoomDtoMap" + chatRoomDTOMap);
-//        return chatRoomDTOMap.get(id);
-//    }
 
     public void save(ChatRoom chatRoom){
         em.persist(chatRoom);
@@ -88,19 +65,4 @@ public class ChatRoomRepository {
                 .setParameter("sellId",sellId)
                 .getResultList();
     }
-//    public ChatRoomDTO createChatRoomDTO(String name){
-//        ++sequence;
-//        ChatRoomDTO room = ChatRoomDTO.create(name,sequence);
-//        System.out.println("room = " + room);
-//        System.out.println("room.getRoomId() = " + room.getRoomId());
-//        chatRoomDTOMap.put(room.getRoomId(), room);
-//
-//        return room;
-//    }
-
-//    public List<ChatRoom> findAll() {
-//    }
-//
-//    public List<ChatRoom> findById(Long roomId) {
-//    }
 }

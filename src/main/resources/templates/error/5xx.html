@@ -1,10 +1,17 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header"/>
+<style>
+    .button{
+        text-decoration : none;
+        color : black;
+        }
+</style>
 <body>
 <div class="container" style="max-width: 600px">
     <div class="py-5 text-center">
         <h2>웹사이트에서 페이지를 표시할 수 없습니다.</h2>
+        <a th:href="@{/sells}" class="button">메인 페이지로 돌아가기</a>
     </div>
     <hr class="my-4">
 </div>
