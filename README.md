@@ -19,7 +19,8 @@ IT 프로젝트 플랫폼 numble에서 주최한 'Spring, Spring Boot로 당근�
 
 ### 배포 URL
 http://54.180.41.136:8080/members/login  
-(id: abc@naver.com, pw: 123 으로 로그인 가능)
+현재 AWS Free Tier 플랜 사용량 한계로 인해 내린 상태입니다.  
+~~(id: abc@naver.com, pw: 123 으로 로그인 가능)~~
 
 ## ERD
 
@@ -27,10 +28,41 @@ http://54.180.41.136:8080/members/login
 
 ## 주요 기능
 1. 회원가입/로그인 기능
+  <p align="center">
+    <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/cb735a68-40c8-4393-948d-5623490c6e9b.jpg" width="100" height="200"/>
+      <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/7de04ba8-94b7-4364-aa75-c1059b868a29.jpg" width="100" height="200"/>
+  </p>
+
 2. 중고거래글 CRUD 기능
-3. 관심상품 저장,삭제 기능
-4. 1:1 채팅 기능(웹 소켓 통신 채팅)
-5. 마이페이지 기능(프로필 수정,판매내역, 관심목록, 채팅목록)
+     <p align="center">
+    <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/c2a22c13-b775-4566-955b-b93d60f213a4.jpg" width="100" height="200"/>
+      <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/e67a06ad-9719-4cc7-923d-018b5ebb63a2.jpg" width="100" height="200"/>
+      <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/e797e77c-f043-4755-bd91-5eb259e29b58.jpg" width="100" height="200"/>
+      <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/8067a6a2-9b52-46c3-9783-59c8cce77116.jpg" width="100" height="200"/>
+  </p>
+
+  <p align="center">
+    <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/952af6e5-889b-4f52-a2c3-aa4d98c60572.jpg" width="100" height="200"/>
+      <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/37336ace-57dc-4477-b27c-906ac7bc7f5a.jpg" width="100" height="200"/>
+  </p>
+
+3. 1:1 채팅 기능(웹 소켓 통신 채팅)
+   <p align="center">
+    <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/6ddfd2fa-8533-46a4-80f4-9b7d6a74614f.jpg" width="100" height="200"/>
+      <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/e4671967-bfce-43b2-911b-bbe00d695ac2.jpg" width="100" height="200"/>
+  </p>
+
+
+4. 마이페이지 기능(프로필 수정,판매내역, 관심목록, 채팅목록)
+        <p align="center">
+    <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/ab265c6e-dbf4-4abe-849e-0b4c49a8b9b9.jpg" width="100" height="200"/>
+      <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/503eae3c-31b1-4895-804d-23a304b9a29e.jpg" width="100" height="200"/>
+      <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/b6073f37-b2c3-4bba-91a7-f91a87b4a8d3.jpg" width="100" height="200"/>
+  </p>
+        <p align="center">
+    <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/f1b4df5a-bc7c-4334-8fb3-106757684914.jpg" width="100" height="200"/>
+      <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/d8e08624-def5-4a0b-8f6c-c62dfde92f50.jpg" width="100" height="200"/>
+  </p>
 
 ## 문제 해결
 멤버 프로필 수정 시 처음에는 프로필 사진만 업로드 하고 두번째 수정할 때는 닉네임만 수정해봤는데 분명 닉네임만 수정했는데  
