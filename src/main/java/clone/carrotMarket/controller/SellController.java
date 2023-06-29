@@ -5,23 +5,20 @@ import clone.carrotMarket.dto.CreateSellDto;
 import clone.carrotMarket.dto.EditSellDto;
 import clone.carrotMarket.dto.SellDetailDto;
 import clone.carrotMarket.dto.SellDto;
-//import clone.carrotMarket.file.FileStore;
 import clone.carrotMarket.service.ChatRoomService;
 import clone.carrotMarket.service.SellService;
-import clone.carrotMarket.web.argumentresolver.Login;
+import clone.carrotMarket.web.security.PrincipalDetails;
 import lombok.AllArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +27,7 @@ import java.util.Map;
 @AllArgsConstructor
 @RequestMapping("/sells")
 public class SellController {
-//    private final FileStore fileStore;
+
 
     private final SellService sellService;
 
@@ -43,6 +40,9 @@ public class SellController {
         categories.add(Category.Digital);
         categories.add(Category.Life);
         categories.add(Category.Interior);
+        categories.add(Category.Plant);
+        categories.add(Category.Food);
+        categories.add(Category.Other);
         return categories;
     }
 
@@ -54,10 +54,11 @@ public class SellController {
 
     @PostMapping("/add")
     public String saveSell(@Valid @ModelAttribute("sell") CreateSellDto createSellDto, BindingResult result,
-                           @Login Member loginMember, RedirectAttributes redirectAttributes) throws IOException {
+                           @AuthenticationPrincipal PrincipalDetails principal, RedirectAttributes redirectAttributes) throws IOException {
         if(result.hasErrors()){
             return "sells/addForm";
         }
+        Member loginMember = principal.getMember();
         if(loginMember == null){
             return "redirect:/members/login";
         }
@@ -67,7 +68,8 @@ public class SellController {
     }
     // 나의 판매 목록 페이지 Controller
     @GetMapping("/my")
-    public String findMySells(@Login Member loginMember, @RequestParam(defaultValue = "판매중") SellStatus sellStatus, Model model){
+    public String findMySells(@AuthenticationPrincipal PrincipalDetails principal, @RequestParam(defaultValue = "판매중") SellStatus sellStatus, Model model){
+        Member loginMember = principal.getMember();
         List<SellDto> mySells = sellService.findMySells(loginMember.getId(),sellStatus);
         model.addAttribute("sells",mySells);
         return "sells/mySells";
@@ -75,7 +77,8 @@ public class SellController {
 
     // 남의 판매 목록 페이지 Controller
     @GetMapping
-    public String findSells(@Login Member loginMember, Model model){
+    public String findSells(@AuthenticationPrincipal PrincipalDetails principal, Model model){
+        Member loginMember = principal.getMember();
         List<SellDto> mySells = sellService.findSells(loginMember.getId());
         model.addAttribute("myPlace",loginMember.getMyPlace().getPlace());
         model.addAttribute("sells",mySells);
@@ -102,7 +105,8 @@ public class SellController {
     // 남의 판매글 상세 페이지 Controller
     @GetMapping("/{sellId}")
     public String SellDetail(@PathVariable Long sellId, @RequestParam Long sellerId,
-                             @Login Member loginMember, Model model){
+                             @AuthenticationPrincipal PrincipalDetails principal, Model model){
+        Member loginMember = principal.getMember();
         Map<String, Object> sellDetailMap = sellService.findSell(sellId, sellerId,loginMember);
         Long roomId = chatRoomService.findRoomId(sellId, loginMember.getId());
         model.addAttribute("sell", sellDetailMap.get("sell"));
@@ -126,10 +130,11 @@ public class SellController {
     @PutMapping("/edit/{sellId}")
     public String editSell(
                            @Valid @ModelAttribute("sell") EditSellDto editSellDto, BindingResult result,
-                           @Login Member loginMember, Model model) throws IOException {
+                           @AuthenticationPrincipal PrincipalDetails principal, Model model) throws IOException {
         if(result.hasErrors()){
             return "sells/editForm";
         }
+        Member loginMember = principal.getMember();
         if(loginMember == null){
             return "redirect:/members/login";
         }
@@ -155,9 +160,4 @@ public class SellController {
         return "redirect:/sells/my";
     }
 
-//    @ResponseBody
-//    @GetMapping("/images/{filename}")
-//    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
-//        return new UrlResource("file:" + fileStore.getFullPath(filename));
-//    }
 }

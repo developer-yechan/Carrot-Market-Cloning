@@ -1,35 +1,30 @@
 package clone.carrotMarket.controller;
-
 import clone.carrotMarket.domain.Member;
 import clone.carrotMarket.domain.Place;
 import clone.carrotMarket.dto.CreateMemberDto;
 import clone.carrotMarket.dto.EditMemberDto;
-import clone.carrotMarket.dto.LoginDto;
 import clone.carrotMarket.repository.MemberRepository;
 import clone.carrotMarket.service.LoginService;
 import clone.carrotMarket.service.MemberService;
-import clone.carrotMarket.web.SessionConst;
-import clone.carrotMarket.web.argumentresolver.Login;
+import clone.carrotMarket.web.security.PrincipalDetails;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/members")
 public class MemberController {
 
     private final MemberService memberService;
     private final LoginService loginService;
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/signup")
     public String newMemberForm(Model model){
@@ -44,7 +39,8 @@ public class MemberController {
             return "members/createMemberForm";
         }
         Place memberPlace = new Place(createMemberDto.getPlace(), createMemberDto.getLatitude(), createMemberDto.getLongitude());
-        Member member = new Member(createMemberDto.getEmail(), createMemberDto.getPassword(),
+        String password = passwordEncoder.encode(createMemberDto.getPassword());
+        Member member = new Member(createMemberDto.getEmail(), password,
                 createMemberDto.getPhoneNumber(), createMemberDto.getNickname(), memberPlace);
         try {
             memberService.signUp(member);
@@ -56,46 +52,18 @@ public class MemberController {
         return "redirect:/members/login";
     }
 
-    @GetMapping("/login")
-    public String loginHome(Model model){
-        model.addAttribute("loginDto",new LoginDto());
-        return "members/loginForm";
-    }
-
-    @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginDto loginDto, BindingResult result,
-                        HttpServletRequest request){
-        if(result.hasErrors()){
-            return "members/loginForm";
-        }
-        Member loginMember = loginService.login(loginDto);
-        if(loginMember == null){
-            result.reject("loginFail","아이디 또는 비밀번호가 틀렸습니다.");
-            return "members/loginForm";
-        }
-        HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_MEMBER,loginMember);
-        return "redirect:/sells";
-    }
-
-    @GetMapping("/myPage")
-    public String myPage(@Login Member loginMember, Model model){
+    @GetMapping("/members/myPage")
+    public String myPage(@AuthenticationPrincipal PrincipalDetails principal, Model model){
+        Member loginMember = principal.getMember();
         Member member = memberRepository.findMemberById(loginMember.getId());
         model.addAttribute("member",member);
         return "members/myPage";
     }
 
-    @PostMapping("/logout")
-    public String logout(HttpServletRequest request){
-        HttpSession session = request.getSession(false);
-        if(session != null){
-            session.invalidate();
-        }
-        return "redirect:/members/login";
-    }
 
-    @GetMapping("/edit")
-    public String editMemberPage(@Login Member loginMember, Model model){
+    @GetMapping("/members/edit")
+    public String editMemberPage(@AuthenticationPrincipal PrincipalDetails principal, Model model){
+        Member loginMember = principal.getMember();
         Member member = memberRepository.findMemberById(loginMember.getId());
         EditMemberDto editMemberDto = new EditMemberDto();
         editMemberDto.setId(member.getId());
@@ -105,7 +73,7 @@ public class MemberController {
         return "members/editProfile";
     }
 
-    @PatchMapping("/edit")
+    @PatchMapping("/members/edit")
     public String editMember(@Valid @ModelAttribute EditMemberDto editMemberDto,
                              BindingResult bindingResult) throws IOException {
         if(bindingResult.hasErrors()){
@@ -115,7 +83,7 @@ public class MemberController {
         return "redirect:/members/myPage";
     }
 
-    @PatchMapping("/deleteImage/{memberId}")
+    @PatchMapping("/members/deleteImage/{memberId}")
     public String deleteProfileImage(@PathVariable Long memberId){
         memberService.deleteProfileImage(memberId);
         return "redirect:/members/myPage";

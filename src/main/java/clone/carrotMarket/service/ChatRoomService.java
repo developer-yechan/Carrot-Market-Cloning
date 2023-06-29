@@ -5,6 +5,7 @@ import clone.carrotMarket.domain.ChatRoom;
 import clone.carrotMarket.domain.Sell;
 import clone.carrotMarket.dto.ChatMessageDTO;
 import clone.carrotMarket.dto.ChatRoomDTO;
+import clone.carrotMarket.repository.ChatMessageRepository;
 import clone.carrotMarket.repository.ChatRoomRepository;
 import clone.carrotMarket.repository.MemberRepository;
 import clone.carrotMarket.repository.SellRepository;
@@ -22,7 +23,6 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ChatRoomService {
 
-    //    private Map<Long, ChatRoom> chatRooms;
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
     private final MemberRepository memberRepository;
@@ -36,7 +36,6 @@ public class ChatRoomService {
         List<Sell> sells  = sellRepository.findSellById(sellId);
         ChatRoom chatRoom = new ChatRoom(sender, sells.get(0));
         chatRoomRepository.save(chatRoom);
-        System.out.println("chatRoom = " + chatRoom);
 
         return chatRoom.getId();
     }

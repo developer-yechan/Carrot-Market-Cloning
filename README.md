@@ -26,11 +26,11 @@ http://54.180.41.136:8080/members/login
 ![image](https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/33354e69-0404-4df9-b073-ec642592dd51)
 
 ## 주요 기능
-1. 회원가입/로그인 기능
+1. Spring Security 활용한 회원가입/로그인 기능
 2. 중고거래글 CRUD 기능
 3. 관심상품 저장,삭제 기능
 4. 1:1 채팅 기능(웹 소켓 통신 채팅)
-5. 마이페이지 기능(프로필 수정,판매내역, 관심목록, 채팅목록)
+5. 마이페이지 기능(프로필 수정, 판매내역, 관심목록, 채팅목록)
 
 ## 문제 해결
 멤버 프로필 수정 시 처음에는 프로필 사진만 업로드 하고 두번째 수정할 때는 닉네임만 수정해봤는데 분명 닉네임만 수정했는데  
@@ -73,4 +73,4 @@ print된 결과
 이런 식으로 코드를 작성해줌으로서 문제를 해결할 수 있었다.
 
 ## 기술 스택
-### Java, Spring, Spring Boot, JPA, MySQL
+### Java, Spring, Spring Boot, Spring Security, WebSocket, JPA, MySQL, AWS EC2, RDS, S3

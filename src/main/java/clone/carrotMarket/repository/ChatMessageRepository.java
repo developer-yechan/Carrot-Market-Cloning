@@ -1,4 +1,4 @@
-package clone.carrotMarket.service;
+package clone.carrotMarket.repository;
 
 import clone.carrotMarket.domain.ChatMessage;
 import lombok.AllArgsConstructor;

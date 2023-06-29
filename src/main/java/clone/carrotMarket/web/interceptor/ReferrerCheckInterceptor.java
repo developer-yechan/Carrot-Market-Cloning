@@ -9,14 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Slf4j
-public class LoginInterceptor implements HandlerInterceptor {
+public class ReferrerCheckInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String requestURI = request.getRequestURI();
-        HttpSession session = request.getSession(false);
-        if(session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null){
-            log.info("미인증 사용자 요청");
-            response.sendRedirect("/members/login");
+        String referrer = request.getHeader("Referer");
+        String host = request.getHeader("host");
+        if (referrer == null || !referrer.contains(host)) {
+            response.sendRedirect("/login");
             return false;
         }
         return true;

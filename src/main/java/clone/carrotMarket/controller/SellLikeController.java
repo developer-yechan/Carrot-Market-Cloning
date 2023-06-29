@@ -1,11 +1,11 @@
 package clone.carrotMarket.controller;
-
 import clone.carrotMarket.domain.Member;
 import clone.carrotMarket.domain.SellStatus;
 import clone.carrotMarket.dto.SellDto;
 import clone.carrotMarket.service.SellLikeService;
-import clone.carrotMarket.web.argumentresolver.Login;
+import clone.carrotMarket.web.security.PrincipalDetails;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,8 @@ public class SellLikeController {
     private final SellLikeService sellLikeService;
 
     @PostMapping("/{sellId}")
-    public String addSellLike(@PathVariable Long sellId, @Login Member loginMember, @RequestParam Long sellerId ){
+    public String addSellLike(@PathVariable Long sellId, @AuthenticationPrincipal PrincipalDetails principal, @RequestParam Long sellerId ){
+        Member loginMember = principal.getMember();
         if(loginMember == null){
             return "redirect:/members/login";
         }
@@ -29,7 +30,8 @@ public class SellLikeController {
     }
 
     @DeleteMapping("/{sellId}")
-    public String deleteSellLike(@PathVariable Long sellId, @Login Member loginMember, @RequestParam Long sellerId ){
+    public String deleteSellLike(@PathVariable Long sellId, @AuthenticationPrincipal PrincipalDetails principal, @RequestParam Long sellerId ){
+        Member loginMember = principal.getMember();
         if(loginMember == null){
             return "redirect:/members/login";
         }

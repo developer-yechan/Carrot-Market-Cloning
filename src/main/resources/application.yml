@@ -10,16 +10,17 @@ cloud:
       instanceProfile: true
 spring:
   config:
-    import : aws.yml
+    import :
+      - aws.yml
+      - localDB.yml
   jpa:
     hibernate:
       ddl-auto: update
-  properties:
-    hibernate:
-      show_sql: true
-      format_sql: true
-      dialect: org.hibernate.dialect.MySQL8InnoDBDialect
-      default_batch_fetch_size : 100
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size : 100
   servlet:
     multipart:
       max-file-size: 10MB

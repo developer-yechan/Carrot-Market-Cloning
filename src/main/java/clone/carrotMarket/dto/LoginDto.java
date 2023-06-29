@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 public class LoginDto {
     @NotEmpty
     @Email
-    private String email;
+    private String username; //사용자 email
     @NotEmpty
     private String password;
 }
