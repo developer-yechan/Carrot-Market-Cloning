@@ -11,6 +11,8 @@
 
 [기술 스택](#기술-스택)
 
+[회고](#회고)
+
 
 ## 소개
 
@@ -106,3 +108,6 @@ print된 결과
 
 ## 기술 스택
 ### Java, Spring, Spring Boot, Spring Security, WebSocket, JPA, MySQL, AWS EC2, RDS, S3
+
+## 회고
+https://bit.ly/3Nz4DyH
