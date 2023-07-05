@@ -7,6 +7,7 @@ build/
 
 aws.yml
 localDB.yml
+jwt.yml
 #ignore property file
 config.properties
 

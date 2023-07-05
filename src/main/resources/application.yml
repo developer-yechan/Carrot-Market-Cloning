@@ -13,6 +13,7 @@ spring:
     import :
       - aws.yml
       - localDB.yml
+      - jwt.yml
   jpa:
     hibernate:
       ddl-auto: update

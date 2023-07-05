@@ -5,6 +5,7 @@ import clone.carrotMarket.file.S3Upload;
 import clone.carrotMarket.repository.SellLikeRepository;
 import clone.carrotMarket.repository.SellRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Transactional(readOnly = true)
 @AllArgsConstructor
 @Service
@@ -62,6 +64,9 @@ public class SellService {
     @Transactional
     public SellDetailDto findMySell(Long sellId) {
         List<Sell> mySells = sellRepository.findSellById(sellId);
+        if(mySells.size() == 0){
+            throw new IllegalArgumentException("존재하지 않는 게시물입니다.");
+        }
         mySells.get(0).setViews(mySells.get(0).getViews()+1);
         List<SellDetailDto> result = mySells.stream().map(mySell -> new SellDetailDto(mySell))
                 .collect(Collectors.toList());

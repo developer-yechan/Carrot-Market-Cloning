@@ -1,5 +1,4 @@
 package clone.carrotMarket.controller;
-
 import clone.carrotMarket.domain.*;
 import clone.carrotMarket.dto.CreateSellDto;
 import clone.carrotMarket.dto.EditSellDto;
@@ -9,7 +8,6 @@ import clone.carrotMarket.service.ChatRoomService;
 import clone.carrotMarket.service.SellService;
 import clone.carrotMarket.web.security.PrincipalDetails;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +25,6 @@ import java.util.Map;
 @AllArgsConstructor
 @RequestMapping("/sells")
 public class SellController {
-
 
     private final SellService sellService;
 

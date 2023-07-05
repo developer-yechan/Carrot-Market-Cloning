@@ -20,6 +20,13 @@ public class ApiControllerAdvice {
         return ResponseEntity.badRequest().body(errors);
     }
 
+    @ExceptionHandler({IllegalArgumentException.class,IllegalStateException.class})
+    public ResponseEntity<Map<String,String>> handleIllegalArgumentExceptions(RuntimeException ex){
+        Map<String,String> errors = new HashMap<>();
+        errors.put("error",ex.getMessage());
+        return ResponseEntity.badRequest().body(errors);
+    }
+
     @ExceptionHandler(InvalidFormatException.class)
     public ResponseEntity<Map<String,Object>> handleInvalidFormatExceptionExceptions(InvalidFormatException ex){
         Object value = ex.getValue();
