@@ -14,6 +14,9 @@ spring:
       - aws.yml
       - localDB.yml
       - jwt.yml
+  redis:
+    host : 127.0.0.1
+    port : 6379
   jpa:
     hibernate:
       ddl-auto: update
