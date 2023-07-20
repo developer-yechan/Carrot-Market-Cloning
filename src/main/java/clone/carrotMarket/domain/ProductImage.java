@@ -31,13 +31,13 @@ public class ProductImage {
         this.imageRank = imageRank;
     }
 
-    @Override
-    public String toString() {
-        return "ProductImage{" +
-                "id=" + id +
-                ", sell=" + sell +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", imageRank=" + imageRank +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "ProductImage{" +
+//                "id=" + id +
+//                ", sell=" + sell +
+//                ", imageUrl='" + imageUrl + '\'' +
+//                ", imageRank=" + imageRank +
+//                '}';
+//    }
 }

@@ -17,8 +17,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,59 +56,72 @@ public class SellApiController {
        return mySells;
     }
 
-    @PostMapping("/add")
-    public String saveSell(@Valid @RequestBody CreateSellDto createSellDto, BindingResult result,
+    @PostMapping
+    public Long saveSell(@Valid @RequestBody CreateSellDto createSellDto, BindingResult result,
                            @AuthenticationPrincipal PrincipalDetails principal, RedirectAttributes redirectAttributes) throws IOException {
         if(result.hasErrors()){
-            return "sells/addForm";
+            throw new IllegalArgumentException("사용자 입력값이 올바르지 않습니다.");
         }
         Member loginMember = principal.getMember();
         if(loginMember == null){
-            return "redirect:/members/login";
+            throw new IllegalStateException("로그인을 먼저 해주세요.");
         }
 
         Sell sell = sellService.save(createSellDto, loginMember);
-        return "redirect:/sells/my/"+sell.getId();
+        return sell.getId();
     }
 
     // 남의 판매 목록 페이지 Controller
     @GetMapping
-    public String findSells(@AuthenticationPrincipal PrincipalDetails principal, Model model){
+    public List<SellDto> findSells(@AuthenticationPrincipal PrincipalDetails principal, Model model){
         Member loginMember = principal.getMember();
         List<SellDto> mySells = sellService.findSells(loginMember.getId());
-        model.addAttribute("myPlace",loginMember.getMyPlace().getPlace());
-        model.addAttribute("sells",mySells);
-        return "sells/sellList";
+        return mySells;
     }
 
     // 남의 판매글 상세 페이지 API Controller
     @GetMapping("/{sellId}")
-    public String SellDetail(@PathVariable Long sellId, @RequestParam Long sellerId,
+    public Map<String, Object> SellDetail(@PathVariable Long sellId, @RequestParam Long sellerId,
                              @AuthenticationPrincipal PrincipalDetails principal, Model model){
         Member loginMember = principal.getMember();
         Map<String, Object> sellDetailMap = sellService.findSell(sellId, sellerId,loginMember);
+        SellDetailDto sell = (SellDetailDto) sellDetailMap.get("sell");
+        sell.getRoomIds().clear();
         Long roomId = chatRoomService.findRoomId(sellId, loginMember.getId());
-        model.addAttribute("sell", sellDetailMap.get("sell"));
-        model.addAttribute("otherSells", sellDetailMap.get("otherSells"));
-        model.addAttribute("loginId",loginMember.getId());
-        model.addAttribute("roomId",roomId);
-        if(sellDetailMap.get("sellLike") != null){
-            model.addAttribute("sellLikeBoolean",true);
-        }else{
-            model.addAttribute("sellLikeBoolean",false);
-        }
-        return "sells/sellDetail";
+        sellDetailMap.put("roomId",roomId);
+        return sellDetailMap;
     }
 
-    @PatchMapping("/edit")
+    // 다른 판매 상품 목록 페이지
+    @GetMapping("/other/{sellId}")
+    public List<SellDto> findOtherSells(@PathVariable Long sellId,
+                                 @RequestParam Long memberId,
+                                 @RequestParam(required = false) SellStatus sellStatus, Model model){
+        List<SellDto> sells = sellService.findOtherSells(sellId,memberId,sellStatus);
+        return sells;
+    }
+
+    @PutMapping("/{sellId}")
     public String editSell(
-            @Valid @RequestBody EditSellDto editSellDto,
+            @Valid @RequestBody EditSellDto editSellDto, @PathVariable Long sellId,
             @AuthenticationPrincipal PrincipalDetails principal) throws IOException {
 
         if(principal.getMember().getId() == null){
            throw new IllegalStateException("먼저 로그인을 해주세요");
         }
         sellService.update(editSellDto);
-        return "수정완료";
+        return "판매 글 수정 완료";
+    }
+
+    @PatchMapping("/{sellId}")
+    public String updateStatus(@PathVariable Long sellId, @RequestParam SellStatus sellStatus, HttpServletRequest request){
+        sellService.updateStatus(sellId,sellStatus);
+        return "판매 상태 수정 완료";
+    }
+
+    @DeleteMapping("/{sellId}")
+    public String deleteSell(@PathVariable Long sellId){
+        sellService.delete(sellId);
+        return "판매 글 삭제 완료";
     }
 }

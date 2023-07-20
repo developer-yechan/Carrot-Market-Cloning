@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,36 +28,50 @@ public class SellService {
 
     @Transactional
     public Long update(EditSellDto editSellDto) throws IOException {
-        List<Sell> mySells = sellRepository.findMySimpleSellById(editSellDto.getSellId());
-        Sell mySell = mySells.get(0);
-        if(StringUtils.hasText(editSellDto.getImageFiles().get(0).getOriginalFilename())){
-            List<ProductImage> productImages = s3Upload.getProductImages(editSellDto.getImageFiles());
-            mySell.getProductImages().clear();
-            for (ProductImage productImage : productImages) {
-                mySell.addProductImage(productImage);
+        try{
+            List<Sell> mySells = sellRepository.findMySimpleSellById(editSellDto.getSellId());
+            Sell mySell = mySells.get(0);
+            if(editSellDto.getImageFiles() != null){
+                if(StringUtils.hasText(editSellDto.getImageFiles().get(0).getOriginalFilename())){
+                    List<ProductImage> productImages = s3Upload.getProductImages(editSellDto.getImageFiles());
+                    mySell.getProductImages().clear();
+                    for (ProductImage productImage : productImages) {
+                        mySell.addProductImage(productImage);
+                    }
+                }
             }
+            if(StringUtils.hasText(editSellDto.getPlace())){
+                Place place = new Place(editSellDto.getPlace(), editSellDto.getLatitude(), editSellDto.getLongitude());
+                mySell.setTradePlace(place);
+            }
+            mySell.setTitle(editSellDto.getTitle());
+            mySell.setContent(editSellDto.getContent());
+            mySell.setPrice(editSellDto.getPrice());
+            mySell.setCategory(editSellDto.getCategory());
+            return mySell.getId();
+        }catch(Exception e){
+            log.error(e.getMessage());
+            throw new IllegalStateException(e.getMessage());
         }
-        if(StringUtils.hasText(editSellDto.getPlace())){
-            Place place = new Place(editSellDto.getPlace(), editSellDto.getLatitude(), editSellDto.getLongitude());
-            mySell.setTradePlace(place);
-        }
-        mySell.setTitle(editSellDto.getTitle());
-        mySell.setContent(editSellDto.getContent());
-        mySell.setPrice(editSellDto.getPrice());
-        mySell.setCategory(editSellDto.getCategory());
-
-        return mySell.getId();
     }
 
     @Transactional
     public Sell save(CreateSellDto createSellDto, Member loginMember) throws IOException {
-        List<ProductImage> productImages = s3Upload.getProductImages(createSellDto.getImageFiles());
-        Place place = new Place(createSellDto.getPlace(), createSellDto.getLatitude(), createSellDto.getLongitude());
-        Sell sell = Sell.createSell(loginMember, productImages, createSellDto.getTitle(),
-                createSellDto.getContent(), createSellDto.getPrice(),
-                createSellDto.getCategory(),place);
-        sellRepository.save(sell);
-        return sell;
+        try{
+            List<ProductImage> productImages = new ArrayList<>();
+            if(createSellDto.getImageFiles() != null){
+                productImages = s3Upload.getProductImages(createSellDto.getImageFiles());
+            }
+            Place place = new Place(createSellDto.getPlace(), createSellDto.getLatitude(), createSellDto.getLongitude());
+            Sell sell = Sell.createSell(loginMember, productImages, createSellDto.getTitle(),
+                    createSellDto.getContent(), createSellDto.getPrice(),
+                    createSellDto.getCategory(),place);
+            sellRepository.save(sell);
+            return sell;
+        }catch(Exception e){
+            log.error(e.getMessage());
+            throw new IllegalStateException(e.getMessage());
+        }
     }
 
 
@@ -83,6 +98,9 @@ public class SellService {
     @Transactional
     public void delete(Long sellId) {
         List<Sell> mySells = sellRepository.findMySimpleSellById(sellId);
+        if(mySells.size() == 0){
+            throw new IllegalArgumentException("존재하지 않는 게시물입니다.");
+        }
         sellRepository.delete(mySells.get(0));
     }
 
@@ -111,6 +129,7 @@ public class SellService {
 
     @Transactional
     public Map<String, Object> findSell(Long sellId, Long sellerId, Member loginMember) {
+
         List<Sell> sells = sellRepository.findSellById(sellId);
         sells.get(0).setViews(sells.get(0).getViews()+1);
         List<SellDetailDto> sellDetailDtos = sells.stream().map(sell -> new SellDetailDto(sell))
@@ -123,7 +142,11 @@ public class SellService {
         Map<String, Object> sellDetailMap = new HashMap<>();
         sellDetailMap.put("sell",sellDetailDtos.get(0));
         sellDetailMap.put("otherSells", otherSellDtos);
-        sellDetailMap.put("sellLike",sellLike);
+        if(sellLike != null){
+            sellDetailMap.put("sellLike",true);
+        }else{
+            sellDetailMap.put("sellLike",false);
+        }
 
         return sellDetailMap;
     }

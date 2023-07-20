@@ -5,6 +5,7 @@ import clone.carrotMarket.domain.Sell;
 import clone.carrotMarket.domain.SellLike;
 import clone.carrotMarket.domain.SellStatus;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Repository
 @AllArgsConstructor
 @Transactional(readOnly = true)
@@ -77,9 +79,15 @@ public class SellRepository {
     }
 
     public Sell updateStatus(Long sellId, SellStatus sellStatus) {
-        Sell sell = em.find(Sell.class, sellId);
-        sell.setSellStatus(sellStatus);
-        return sell;
+        try{
+            Sell sell = em.find(Sell.class, sellId);
+            sell.setSellStatus(sellStatus);
+            return sell;
+        }catch(Exception e){
+            log.error(e.getMessage());
+            throw new IllegalStateException("존재하지 않는 게시물입니다.");
+        }
+
     }
 
 }

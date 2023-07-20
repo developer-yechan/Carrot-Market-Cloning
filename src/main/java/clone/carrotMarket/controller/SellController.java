@@ -8,6 +8,7 @@ import clone.carrotMarket.service.ChatRoomService;
 import clone.carrotMarket.service.SellService;
 import clone.carrotMarket.web.security.PrincipalDetails;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 @RequestMapping("/sells")
@@ -59,7 +61,7 @@ public class SellController {
         if(loginMember == null){
             return "redirect:/members/login";
         }
-
+        log.info("imageFile = {}",createSellDto.getImageFiles().get(0));
         Sell sell = sellService.save(createSellDto, loginMember);
         return "redirect:/sells/my/"+sell.getId();
     }
@@ -81,7 +83,7 @@ public class SellController {
         model.addAttribute("sells",mySells);
         return "sells/sellList";
     }
-
+    // 다른 판매 상품 목록 페이지
     @GetMapping("/other/{sellId}")
     public String findOtherSells(@PathVariable Long sellId,
                                  @RequestParam Long memberId,
@@ -110,11 +112,7 @@ public class SellController {
         model.addAttribute("otherSells", sellDetailMap.get("otherSells"));
         model.addAttribute("loginId",loginMember.getId());
         model.addAttribute("roomId",roomId);
-        if(sellDetailMap.get("sellLike") != null){
-            model.addAttribute("sellLikeBoolean",true);
-        }else{
-            model.addAttribute("sellLikeBoolean",false);
-        }
+        model.addAttribute("sellLikeBoolean",sellDetailMap.get("sellLike"));
         return "sells/sellDetail";
     }
 

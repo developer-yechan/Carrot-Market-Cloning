@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 public class CreateSellDto {
-    @NotNull
+
     private List<MultipartFile> imageFiles;
     @NotBlank
     private String title;
