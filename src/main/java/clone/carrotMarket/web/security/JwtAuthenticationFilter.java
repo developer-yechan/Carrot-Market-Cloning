@@ -66,7 +66,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                     PrincipalDetails principal = new PrincipalDetails(members.get(0));
                     log.info("Authentication 객체 생성");
                     Authentication authentication = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
-                    log.info("시큐리티 세션에 접근하여 Authentication 객체 저장");
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     log.info("다음 필터로");
                 }else{

@@ -1,8 +1,10 @@
-package clone.carrotMarket.controller;
+package clone.carrotMarket.api.controller;
 
 
 import clone.carrotMarket.domain.Member;
 import clone.carrotMarket.dto.ChatRoomDTO;
+import clone.carrotMarket.dto.EnterRoomDto;
+import clone.carrotMarket.dto.SuccessDTO;
 import clone.carrotMarket.service.ChatRoomService;
 import clone.carrotMarket.web.security.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
@@ -11,54 +13,55 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/chat")
+@RequestMapping(value = "/api/chat")
 @Log4j2
-public class ChatRoomController {
+public class ChatRoomAPIController {
     private final ChatRoomService chatRoomService;
 
     //나의 채팅방 목록 조회
     @GetMapping("/rooms")
-    public String rooms(Model model,@AuthenticationPrincipal PrincipalDetails principal){
+    public List<ChatRoomDTO> findMyRooms(@AuthenticationPrincipal PrincipalDetails principal){
         log.info("# All Chat Rooms");
         Member loginMember = principal.getMember();
-        model.addAttribute("list",chatRoomService.findAllRooms(loginMember.getId()));
-        model.addAttribute("loginId",loginMember.getId());
-        return "chat/rooms";
+        List<ChatRoomDTO> allRooms = chatRoomService.findAllRooms(loginMember.getId());
+        return allRooms;
     }
 
     // 상품 관련 채팅방 목록 조회
     @GetMapping("/rooms/{sellId}")
-    public String roomsOfSell(@PathVariable Long sellId, @AuthenticationPrincipal PrincipalDetails principal,
+    public List<ChatRoomDTO> findRoomsOfSell(@PathVariable Long sellId, @AuthenticationPrincipal PrincipalDetails principal,
                               Model model){
         Member loginMember = principal.getMember();
-        model.addAttribute("list",chatRoomService.findRoomsOfSell(sellId));
-        model.addAttribute("loginId",loginMember.getId());
-        return "chat/rooms";
+        List<ChatRoomDTO> roomsOfSell = chatRoomService.findRoomsOfSell(sellId);
+
+        return roomsOfSell;
     }
 
     //채팅방 개설
-    @PostMapping(value = "/room/{sellId}")
-    public String create(@PathVariable Long sellId, @AuthenticationPrincipal PrincipalDetails principal){
+    @PostMapping(value = "/rooms/{sellId}")
+    public SuccessDTO create(@PathVariable Long sellId, @AuthenticationPrincipal PrincipalDetails principal){
         Member loginMember = principal.getMember();
         Long senderId = loginMember.getId();
         log.info("# Create Chat Room , senderId: " + senderId);
         Long chatRoomId = chatRoomService.findRoomId(sellId, loginMember.getId());
         if(chatRoomId != null){
-            return "redirect:/chat/room/"+chatRoomId;
+            return new SuccessDTO(302,"http://localhost:8080/api/chat/rooms/"+chatRoomId);
         }
         Long roomId = chatRoomService.createRoom(sellId, senderId);
-        return "redirect:/chat/room/"+roomId;
+        return new SuccessDTO(201,"http://localhost:8080/api/chat/rooms/"+roomId) ;
     }
 
     //채팅방 입장
-    @GetMapping("/room/{roomId}")
-    public String getRoom(@PathVariable Long roomId , @AuthenticationPrincipal PrincipalDetails principal,
+    @GetMapping("/rooms/enter/{roomId}")
+    public EnterRoomDto enterRoom(@PathVariable Long roomId , @AuthenticationPrincipal PrincipalDetails principal,
                           Model model, HttpServletResponse response) throws IOException {
 
         log.info("# Enter Chat Room, roomID : " + roomId);
@@ -67,8 +70,7 @@ public class ChatRoomController {
         if(loginMember.getId() != chatRoomDTO.getSellerId() && loginMember.getId() != chatRoomDTO.getSenderId()){
             response.sendError(403, "잘못된 요청입니다.");
         }
-        model.addAttribute("room", chatRoomDTO);
-        model.addAttribute("loginMember",loginMember);
-        return "chat/room";
+
+        return new EnterRoomDto(chatRoomDTO,loginMember.getId(),loginMember.getNickname());
     }
 }

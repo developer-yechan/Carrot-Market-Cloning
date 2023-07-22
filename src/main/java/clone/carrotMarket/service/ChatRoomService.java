@@ -32,50 +32,81 @@ public class ChatRoomService {
     //채팅방 생성
     @Transactional
     public Long createRoom(Long sellId, Long senderId) {
-        Member sender = memberRepository.findById(senderId);
-        List<Sell> sells  = sellRepository.findSellById(sellId);
-        ChatRoom chatRoom = new ChatRoom(sender, sells.get(0));
-        chatRoomRepository.save(chatRoom);
-
-        return chatRoom.getId();
+        try{
+            Member sender = memberRepository.findById(senderId);
+            List<Sell> sells  = sellRepository.findSellById(sellId);
+            ChatRoom chatRoom = new ChatRoom(sender, sells.get(0));
+            chatRoomRepository.save(chatRoom);
+            return chatRoom.getId();
+        }catch (Exception e){
+            log.error(e.getMessage());
+            throw new IllegalStateException("잘못된 요청입니다.");
+        }
     }
 
     public ChatRoomDTO findRoom(Long roomId) {
-        List<ChatRoom> chatRooms = chatRoomRepository.findById(roomId);
-        List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDTO(chatRoom))
-                .collect(Collectors.toList());
-        return chatRoomDTOs.get(0);
+        try{
+            List<ChatRoom> chatRooms = chatRoomRepository.findById(roomId);
+            List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDTO(chatRoom))
+                    .collect(Collectors.toList());
+            return chatRoomDTOs.get(0);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            throw new IllegalStateException("잘못된 요청입니다.");
+        }
     }
 
     @Transactional
     public void saveChat(ChatMessageDTO ChatMessageDTO) {
-        Member member = memberRepository.findById(ChatMessageDTO.getSenderId());
-        List<ChatRoom> chatRooms = chatRoomRepository.findById(ChatMessageDTO.getRoomId());
-        ChatMessage chatMessage = new ChatMessage(chatRooms.get(0),
-                member,ChatMessageDTO.getMessage());
-        chatMessageRepository.save(chatMessage);
+        try{
+            Member member = memberRepository.findById(ChatMessageDTO.getSenderId());
+            List<ChatRoom> chatRooms = chatRoomRepository.findById(ChatMessageDTO.getRoomId());
+            ChatMessage chatMessage = new ChatMessage(chatRooms.get(0),
+                    member,ChatMessageDTO.getMessage());
+            chatMessageRepository.save(chatMessage);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            throw new IllegalStateException("잘못된 요청입니다.");
+        }
     }
 
     public List<ChatRoomDTO> findAllRooms(Long memberId) {
-        List<ChatRoom> chatRooms = chatRoomRepository.findAll(memberId);
-        List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDTO(chatRoom))
-                .collect(Collectors.toList());
-        return chatRoomDTOs;
+        try{
+            List<ChatRoom> chatRooms = chatRoomRepository.findAll(memberId);
+            List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDTO(chatRoom))
+                    .collect(Collectors.toList());
+            return chatRoomDTOs;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            throw new IllegalStateException("잘못된 요청입니다.");
+        }
     }
 
-    public Object findRoomsOfSell(Long sellId) {
-        List<ChatRoom> chatRooms = chatRoomRepository.findRoomsOfSell(sellId);
-        List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDTO(chatRoom))
-                .collect(Collectors.toList());
-        return chatRoomDTOs;
+    public List<ChatRoomDTO> findRoomsOfSell(Long sellId) {
+        try{
+            List<ChatRoom> chatRooms = chatRoomRepository.findRoomsOfSell(sellId);
+            List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDTO(chatRoom))
+                    .collect(Collectors.toList());
+            return chatRoomDTOs;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            throw new IllegalStateException("잘못된 요청입니다.");
+        }
+
     }
 
     public Long findRoomId(Long sellId, Long senderId) {
-        List<ChatRoom> chatrooms = chatRoomRepository.findRoomId(sellId, senderId);
-        if(chatrooms.size()>0){
-            List<Long> roomIds = chatrooms.stream().map(chatRoom -> chatRoom.getId()).collect(Collectors.toList());
-            return roomIds.get(0);
+        try{
+            List<ChatRoom> chatrooms = chatRoomRepository.findRoomId(sellId, senderId);
+            if(chatrooms.size()>0){
+                List<Long> roomIds = chatrooms.stream().map(chatRoom -> chatRoom.getId()).collect(Collectors.toList());
+                return roomIds.get(0);
+            }
+            return null;
+        }catch (Exception e){
+            log.error(e.getMessage());
+            throw new IllegalStateException("잘못된 요청입니다.");
         }
-        return null;
+
     }
 }
