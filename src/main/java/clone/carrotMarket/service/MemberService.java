@@ -4,12 +4,14 @@ import clone.carrotMarket.dto.EditMemberDto;
 import clone.carrotMarket.file.S3Upload;
 import clone.carrotMarket.repository.MemberRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
@@ -19,29 +21,52 @@ public class MemberService {
 
     @Transactional
     public Long signUp(Member member){
-        validateDuplicatedMember(member);
-        memberRepository.save(member);
+        try{
+            validateDuplicatedMember(member);
+            memberRepository.save(member);
+        }catch(Exception e){
+            log.error("에러메시지 : {}",e.getMessage());
+            throw e;
+        }
         return member.getId();
     }
 
     private void validateDuplicatedMember(Member member) {
         List<Member> members = memberRepository.findByEmail(member.getEmail());
         if(!members.isEmpty()){
-            throw new IllegalStateException();
+            throw new IllegalStateException("이미 존재하는 회원 email입니다.");
         }
     }
+
     @Transactional
     public void editMember(EditMemberDto editMemberDto) throws IOException {
-        Member member = memberRepository.findMemberById(editMemberDto.getId());
-        if(StringUtils.hasText(editMemberDto.getImageFile().getOriginalFilename())){
-            String storeFileName = s3Upload.upload(editMemberDto.getImageFile(),"profile");
-            member.setProfileImage(storeFileName);
+        try{
+            Member member = memberRepository.findMemberById(editMemberDto.getId());
+            if(editMemberDto.getImageFile() != null){
+                if(StringUtils.hasText(editMemberDto.getImageFile().getOriginalFilename())){
+                    String storeFileName = s3Upload.upload(editMemberDto.getImageFile(),"profile");
+                    member.setProfileImage(storeFileName);
+                }
+            }
+            member.setNickname(editMemberDto.getNickname());
+        }catch (Exception e){
+            log.error("에러메시지 : {}",e.getMessage());
+            throw new IllegalStateException(e.getMessage());
         }
-      member.setNickname(editMemberDto.getNickname());
+
     }
     @Transactional
     public void deleteProfileImage(Long memberId){
-        Member member = memberRepository.findMemberById(memberId);
-        member.setProfileImage(null);
+        try{
+            Member member = memberRepository.findMemberById(memberId);
+            if(member.getProfileImage() != null){
+                member.setProfileImage(null);
+            }else{
+                throw new IllegalStateException("프로필 사진이 이미 삭제되었습니다.");
+            }
+        }catch (Exception e){
+            log.error("에러메시지 : {}",e.getMessage());
+            throw e;
+        }
     }
 }

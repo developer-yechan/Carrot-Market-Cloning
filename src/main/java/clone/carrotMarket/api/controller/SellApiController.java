@@ -38,12 +38,7 @@ public class SellApiController {
     //나의 판매글 상세 API Controller
     @GetMapping("/my/{sellId}")
     public SellDetailDto mySellDetail(@PathVariable Long sellId,
-                                      @AuthenticationPrincipal PrincipalDetails principal
-    ,@RequestParam(defaultValue = "판매중") SellStatus sellStatus){
-        if(principal == null){
-            throw new IllegalStateException("로그인을 먼저 해주세요!");
-        }
-        log.info("인증된 사용자");
+                                      @RequestParam(defaultValue = "판매중") SellStatus sellStatus){
         SellDetailDto mySell = sellService.findMySell(sellId);
         return mySell;
     }
@@ -57,16 +52,10 @@ public class SellApiController {
     }
 
     @PostMapping
-    public Long saveSell(@Valid @RequestBody CreateSellDto createSellDto, BindingResult result,
+    public Long saveSell(@Valid @RequestBody CreateSellDto createSellDto,
                            @AuthenticationPrincipal PrincipalDetails principal, RedirectAttributes redirectAttributes) throws IOException {
-        if(result.hasErrors()){
-            throw new IllegalArgumentException("사용자 입력값이 올바르지 않습니다.");
-        }
-        Member loginMember = principal.getMember();
-        if(loginMember == null){
-            throw new IllegalStateException("로그인을 먼저 해주세요.");
-        }
 
+        Member loginMember = principal.getMember();
         Sell sell = sellService.save(createSellDto, loginMember);
         return sell.getId();
     }
@@ -74,6 +63,7 @@ public class SellApiController {
     // 남의 판매 목록 페이지 Controller
     @GetMapping
     public List<SellDto> findSells(@AuthenticationPrincipal PrincipalDetails principal, Model model){
+        log.info("principal = {}",principal);
         Member loginMember = principal.getMember();
         List<SellDto> mySells = sellService.findSells(loginMember.getId());
         return mySells;
@@ -103,12 +93,8 @@ public class SellApiController {
 
     @PutMapping("/{sellId}")
     public String editSell(
-            @Valid @RequestBody EditSellDto editSellDto, @PathVariable Long sellId,
-            @AuthenticationPrincipal PrincipalDetails principal) throws IOException {
+            @Valid @RequestBody EditSellDto editSellDto, @PathVariable Long sellId) throws IOException {
 
-        if(principal.getMember().getId() == null){
-           throw new IllegalStateException("먼저 로그인을 해주세요");
-        }
         sellService.update(editSellDto);
         return "판매 글 수정 완료";
     }

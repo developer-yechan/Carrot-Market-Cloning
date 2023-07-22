@@ -53,7 +53,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         }
         String jwtToken = jwtHeader.replace("Bearer ", "");
         String username = null;
-        try{
             log.info("jwt 검증");
             username = jwtTokenProvider.validateToken(jwtToken);
             if(username != null){
@@ -63,7 +62,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                     throw new IllegalStateException("존재하지 않는 유저입니다.");
                 }
                 String storedToken = redisTemplate.opsForValue().get(username);
-
                 if(redisTemplate.hasKey(username) && storedToken != null){
                     PrincipalDetails principal = new PrincipalDetails(members.get(0));
                     log.info("Authentication 객체 생성");
@@ -71,11 +69,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                     log.info("시큐리티 세션에 접근하여 Authentication 객체 저장");
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     log.info("다음 필터로");
+                }else{
+                    throw new IllegalStateException("로그아웃 된 유저입니다.");
                 }
                 chain.doFilter(request,response);
+            }else{
+                throw new IllegalStateException("유효하지 않은 토큰입니다.");
             }
-        }catch (Exception e){
-            throw new IllegalStateException("사용자 인증에 실패했습니다.");
-        }
     }
 }

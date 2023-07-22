@@ -22,7 +22,6 @@ import java.io.IOException;
 public class MemberController {
 
     private final MemberService memberService;
-    private final LoginService loginService;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 

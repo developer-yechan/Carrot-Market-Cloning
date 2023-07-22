@@ -54,8 +54,16 @@ public class Member{
     public String toString() {
         return "Member{" +
                 "id=" + id +
+                ", sells=" + sells +
+                ", purchases=" + purchases +
+                ", sellLikes=" + sellLikes +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", profileImage='" + profileImage + '\'' +
+                ", myPlace=" + myPlace +
+                ", manner=" + manner +
                 '}';
     }
 }

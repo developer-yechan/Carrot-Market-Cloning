@@ -22,8 +22,8 @@ public class LoginApiController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest request){
+    public ResponseEntity<String> logout(HttpServletRequest request){
         loginService.logout();
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("로그아웃 완료");
     }
 }

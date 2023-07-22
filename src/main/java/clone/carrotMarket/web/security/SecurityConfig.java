@@ -42,6 +42,7 @@ public class SecurityConfig {
                 )
                 .formLogin().disable()
                 .httpBasic().disable()
+                .addFilterBefore(new ExceptionHandlerFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtAuthenticationFilter(authenticationManagerBuilder,memberRepository,jwtTokenProvider,redisTemplate), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
