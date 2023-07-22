@@ -6,7 +6,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class SuccessDTO {
 
-    private String code;
+    private int code;
     private String message;
 }
 
