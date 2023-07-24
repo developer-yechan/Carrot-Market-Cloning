@@ -11,7 +11,7 @@
 
 [기술 스택](#기술-스택)
 
-[API DOCS](#API-DOCS)
+[API Docs](#API-Docs)
 
 [회고](#회고)
 
