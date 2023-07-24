@@ -11,13 +11,15 @@
 
 [기술 스택](#기술-스택)
 
+[API DOCS](#API-DOCS)
+
 [회고](#회고)
 
 
 ## 소개
 
 IT 프로젝트 플랫폼 numble에서 주최한 'Spring, Spring Boot로 당근마켓 초기버전 클론코딩하기'에 참여하여  
-개발 요구 사항 및 와이어프레임을 제공 받아 구현한 결과물입니다.
+개발 요구 사항 및 와이어프레임을 제공 받아 구현한 결과물입니다.(MVC 및 REST API)
 
 ### 배포 URL
 http://54.180.41.136:8080/members/login  
@@ -30,12 +32,14 @@ http://54.180.41.136:8080/members/login
 
 ## 주요 기능
 
-1. Spring Security 활용한 회원가입 /로그인 기능
+1. Spring Security 활용한 회원가입 /로그인 기능 (REST API는 JWT 인증, MVC는 Session 인증)
+
    <p align="center">
       <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/cb735a68-40c8-4393-948d-5623490c6e9b.jpg" width="100" height="200"/>
       <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/7de04ba8-94b7-4364-aa75-c1059b868a29.jpg" width="100" height="200"/>
    </p>
    <br>
+
 2. 중고거래글 CRUD 기능
    <p align="center">
       <img src="https://github.com/developer-yechan/Carrot-Market-Cloning/assets/99064214/c2a22c13-b775-4566-955b-b93d60f213a4.jpg" width="100" height="200"/>
@@ -108,6 +112,10 @@ print된 결과
 
 ## 기술 스택
 ### Java, Spring, Spring Boot, Spring Security, WebSocket, JPA, MySQL, AWS EC2, RDS, S3
+
+## API Docs
+주소 : http://localhost:8080/swagger-ui/index.html  
+PDF : [carrot-market-api-docs.pdf](carrot-market-api-docs.pdf)
 
 ## 회고
 https://bit.ly/3Nz4DyH

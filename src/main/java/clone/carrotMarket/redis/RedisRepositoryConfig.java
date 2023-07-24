@@ -1,4 +1,4 @@
-package clone.carrotMarket.config;
+package clone.carrotMarket.redis;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
