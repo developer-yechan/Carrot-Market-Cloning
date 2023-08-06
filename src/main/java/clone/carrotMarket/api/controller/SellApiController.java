@@ -36,7 +36,9 @@ public class SellApiController {
     @Operation(summary = "나의 판매글 상세 조회", description = "나의 판매글을 상세 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "나의 판매글 상세 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameters({
             @Parameter(name="sellId",description = "판매글 id",required = true),
@@ -52,7 +54,9 @@ public class SellApiController {
     @Operation(summary = "나의 판매글 목록 조회", description = "나의 판매글 목록을 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "채팅방 개설 성공"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameters({
             @Parameter(name="sellStatus",description = "판매 상태",example = "['판매중','판매완료']",in= ParameterIn.QUERY)
@@ -66,22 +70,26 @@ public class SellApiController {
 
     @Operation(summary = "판매글 등록", description = "새로운 판매글을 등록한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "판매글 등록 성공", content = @Content(schema = @Schema(implementation = SuccessDTO.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "201", description = "판매글 등록 성공", content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping
-    public SuccessDTO saveSell(@Valid @RequestBody CreateSellDto createSellDto,
-                           @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principal) throws IOException {
+    public SuccessResponse saveSell(@Valid @RequestBody CreateSellDto createSellDto,
+                                    @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principal) throws IOException {
 
         Member loginMember = principal.getMember();
         Sell sell = sellService.save(createSellDto, loginMember);
-        return new SuccessDTO(201,sell.getId().toString());
+        return new SuccessResponse(201,sell.getId().toString());
     }
 
     @Operation(summary = "판매 목록 조회", description = "판매 목록을 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "판매 목록 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @GetMapping
     public List<SellDto> findSells(@Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principal){
@@ -94,7 +102,9 @@ public class SellApiController {
     @Operation(summary = "판매글 상세 조회", description = "판매글을 상세 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "판매글 상세 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameters({
             @Parameter(name="sellId",description = "판매글 id",required = true),
@@ -115,7 +125,9 @@ public class SellApiController {
     @Operation(summary = "다른 판매 상품 목록 조회", description = "현재 상품 외 다른 판매 상품 목록 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "현재 상품 외 다른 판매 상품 목록 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameters({
             @Parameter(name="sellId",description = "판매 글 id",required = true),
@@ -132,46 +144,52 @@ public class SellApiController {
 
     @Operation(summary = "판매 글 수정", description = "판매 글을 수정한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "판매 글 수정 성공", content = @Content(schema = @Schema(implementation = SuccessDTO.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "200", description = "판매 글 수정 성공", content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameters({
             @Parameter(name="sellId",description = "판매 글 id",required = true)
     })
     @PutMapping("/{sellId}")
-    public SuccessDTO editSell(
+    public SuccessResponse editSell(
             @Valid @RequestBody EditSellDto editSellDto, @PathVariable Long sellId) throws IOException {
 
         sellService.update(editSellDto);
-        return new SuccessDTO(200,"판매 글 수정 완료");
+        return new SuccessResponse(200,"판매 글 수정 완료");
     }
 
     @Operation(summary = "판매 상태 수정", description = "판매 상태를 수정한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "판매 상태 수정 성공", content = @Content(schema = @Schema(implementation = SuccessDTO.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "200", description = "판매 상태 수정 성공", content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameters({
             @Parameter(name="sellId",description = "판매 글 id",required = true),
             @Parameter(name="sellStatus",description = "판매 상태",example = "['판매중','판매완료']",in= ParameterIn.QUERY,required = true)
     })
     @PatchMapping("/{sellId}")
-    public SuccessDTO updateStatus(@PathVariable Long sellId, @RequestParam SellStatus sellStatus){
+    public SuccessResponse updateStatus(@PathVariable Long sellId, @RequestParam SellStatus sellStatus){
         sellService.updateStatus(sellId,sellStatus);
-        return new SuccessDTO(200,"판매 상태 수정 완료");
+        return new SuccessResponse(200,"판매 상태 수정 완료");
     }
 
     @Operation(summary = "판매 글 삭제", description = "판매 글을 삭제한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "판매 글 삭제 성공", content = @Content(schema = @Schema(implementation = SuccessDTO.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class)))
+            @ApiResponse(responseCode = "200", description = "판매 글 삭제 성공", content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameters({
             @Parameter(name="sellId",description = "판매 글 id",required = true)
     })
     @DeleteMapping("/{sellId}")
-    public SuccessDTO deleteSell(@PathVariable Long sellId){
+    public SuccessResponse deleteSell(@PathVariable Long sellId){
         sellService.delete(sellId);
-        return new SuccessDTO(200,"판매 글 삭제 완료");
+        return new SuccessResponse(200,"판매 글 삭제 완료");
     }
 }

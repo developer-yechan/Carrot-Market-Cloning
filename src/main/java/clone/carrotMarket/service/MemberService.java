@@ -25,8 +25,7 @@ public class MemberService {
             validateDuplicatedMember(member);
             memberRepository.save(member);
         }catch(Exception e){
-            log.error("에러메시지 : {}",e.getMessage());
-            throw e;
+            throw new RuntimeException(e);
         }
         return member.getId();
     }
@@ -50,8 +49,7 @@ public class MemberService {
             }
             member.setNickname(editMemberDto.getNickname());
         }catch (Exception e){
-            log.error("에러메시지 : {}",e.getMessage());
-            throw new IllegalStateException(e.getMessage());
+            throw new RuntimeException(e);
         }
 
     }
@@ -65,8 +63,7 @@ public class MemberService {
                 throw new IllegalStateException("프로필 사진이 이미 삭제되었습니다.");
             }
         }catch (Exception e){
-            log.error("에러메시지 : {}",e.getMessage());
-            throw e;
+            throw new RuntimeException(e);
         }
     }
 }

@@ -29,8 +29,7 @@ public class SellLikeService {
         try{
             sellLikeRepository.save(sellId, loginMember);
         }catch(Exception e){
-            log.error(e.getMessage());
-            throw new IllegalStateException(e.getMessage());
+            throw new RuntimeException(e);
         }
 
     }
@@ -40,8 +39,7 @@ public class SellLikeService {
         try{
             sellLikeRepository.delete(sellId,loginMember);
         }catch(Exception e){
-            log.error(e.getMessage());
-            throw new IllegalStateException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -58,8 +56,7 @@ public class SellLikeService {
             return sellLikes.stream().map(sell -> new SellDto(sell))
                     .collect(Collectors.toList());
         }catch(Exception e){
-            log.error(e.getMessage());
-            throw new IllegalStateException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 }

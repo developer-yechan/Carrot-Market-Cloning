@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class EnterRoomDto {
-    private ChatRoomDTO chatRoomDTO;
+    private ChatRoomDto chatRoomDTO;
     private  Long loginId;
 
     private String loginNickname;
 
-    public EnterRoomDto(ChatRoomDTO chatRoomDTO,Long loginId, String loginNickname){
+    public EnterRoomDto(ChatRoomDto chatRoomDTO, Long loginId, String loginNickname){
         this.chatRoomDTO = chatRoomDTO;
         this.loginId = loginId;
         this.loginNickname = loginNickname;

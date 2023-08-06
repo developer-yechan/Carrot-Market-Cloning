@@ -50,8 +50,7 @@ public class SellService {
             mySell.setCategory(editSellDto.getCategory());
             return mySell.getId();
         }catch(Exception e){
-            log.error(e.getMessage());
-            throw new IllegalStateException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -69,8 +68,7 @@ public class SellService {
             sellRepository.save(sell);
             return sell;
         }catch(Exception e){
-            log.error(e.getMessage());
-            throw new IllegalStateException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 

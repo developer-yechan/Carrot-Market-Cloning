@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 @Data
 @AllArgsConstructor
-public class SuccessDTO {
+public class SuccessResponse {
 
     private int code;
     private String message;

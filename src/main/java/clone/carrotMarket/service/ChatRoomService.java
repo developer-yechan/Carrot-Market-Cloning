@@ -3,8 +3,8 @@ package clone.carrotMarket.service;
 import clone.carrotMarket.domain.ChatMessage;
 import clone.carrotMarket.domain.ChatRoom;
 import clone.carrotMarket.domain.Sell;
-import clone.carrotMarket.dto.ChatMessageDTO;
-import clone.carrotMarket.dto.ChatRoomDTO;
+import clone.carrotMarket.dto.ChatMessageDto;
+import clone.carrotMarket.dto.ChatRoomDto;
 import clone.carrotMarket.repository.ChatMessageRepository;
 import clone.carrotMarket.repository.ChatRoomRepository;
 import clone.carrotMarket.repository.MemberRepository;
@@ -44,10 +44,10 @@ public class ChatRoomService {
         }
     }
 
-    public ChatRoomDTO findRoom(Long roomId) {
+    public ChatRoomDto findRoom(Long roomId) {
         try{
             List<ChatRoom> chatRooms = chatRoomRepository.findById(roomId);
-            List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDTO(chatRoom))
+            List<ChatRoomDto> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDto(chatRoom))
                     .collect(Collectors.toList());
             return chatRoomDTOs.get(0);
         }catch (Exception e){
@@ -57,7 +57,7 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void saveChat(ChatMessageDTO ChatMessageDTO) {
+    public void saveChat(ChatMessageDto ChatMessageDTO) {
         try{
             Member member = memberRepository.findById(ChatMessageDTO.getSenderId());
             List<ChatRoom> chatRooms = chatRoomRepository.findById(ChatMessageDTO.getRoomId());
@@ -70,27 +70,25 @@ public class ChatRoomService {
         }
     }
 
-    public List<ChatRoomDTO> findAllRooms(Long memberId) {
+    public List<ChatRoomDto> findAllRooms(Long memberId) {
         try{
             List<ChatRoom> chatRooms = chatRoomRepository.findAll(memberId);
-            List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDTO(chatRoom))
+            List<ChatRoomDto> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDto(chatRoom))
                     .collect(Collectors.toList());
             return chatRoomDTOs;
         }catch (Exception e){
-            log.error(e.getMessage());
-            throw new IllegalStateException("잘못된 요청입니다.");
+            throw new RuntimeException(e);
         }
     }
 
-    public List<ChatRoomDTO> findRoomsOfSell(Long sellId) {
+    public List<ChatRoomDto> findRoomsOfSell(Long sellId) {
         try{
             List<ChatRoom> chatRooms = chatRoomRepository.findRoomsOfSell(sellId);
-            List<ChatRoomDTO> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDTO(chatRoom))
+            List<ChatRoomDto> chatRoomDTOs = chatRooms.stream().map(chatRoom -> new ChatRoomDto(chatRoom))
                     .collect(Collectors.toList());
             return chatRoomDTOs;
         }catch (Exception e){
-            log.error(e.getMessage());
-            throw new IllegalStateException("잘못된 요청입니다.");
+            throw new RuntimeException(e);
         }
 
     }
@@ -104,8 +102,7 @@ public class ChatRoomService {
             }
             return null;
         }catch (Exception e){
-            log.error(e.getMessage());
-            throw new IllegalStateException("잘못된 요청입니다.");
+            throw new RuntimeException(e);
         }
 
     }

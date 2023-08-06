@@ -1,19 +1,14 @@
 package clone.carrotMarket.dto;
 
 import clone.carrotMarket.domain.*;
-import clone.carrotMarket.repository.ChatRoomRepository;
 import lombok.Data;
 import org.springframework.util.StringUtils;
-import org.springframework.web.socket.WebSocketSession;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Data
-public class ChatRoomDTO {
+public class ChatRoomDto {
     private Long id;
     private Long sellerId;
     private Long senderId;
@@ -31,9 +26,9 @@ public class ChatRoomDTO {
     private String senderImage;
     private String senderNickname;
 
-    private List<ChatMessageDTO> chatMessages;
+    private List<ChatMessageDto> chatMessages;
 
-    public ChatRoomDTO(ChatRoom chatRoom) {
+    public ChatRoomDto(ChatRoom chatRoom) {
         id = chatRoom.getId();
         sellerId = chatRoom.getSell().getMember().getId();
         senderId = chatRoom.getSender().getId();
@@ -57,7 +52,7 @@ public class ChatRoomDTO {
         }
         senderNickname = chatRoom.getSender().getNickname();
         chatMessages = chatRoom.getChatMessages().stream()
-                .map(chatMessage -> new ChatMessageDTO(chatMessage))
+                .map(chatMessage -> new ChatMessageDto(chatMessage))
                 .collect(Collectors.toList());
     }
 }

@@ -2,7 +2,7 @@ package clone.carrotMarket.controller;
 
 
 import clone.carrotMarket.domain.Member;
-import clone.carrotMarket.dto.ChatRoomDTO;
+import clone.carrotMarket.dto.ChatRoomDto;
 import clone.carrotMarket.service.ChatRoomService;
 import clone.carrotMarket.web.security.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +62,7 @@ public class ChatRoomController {
                           Model model, HttpServletResponse response) throws IOException {
 
         log.info("# Enter Chat Room, roomID : " + roomId);
-        ChatRoomDTO chatRoomDTO = chatRoomService.findRoom(roomId);
+        ChatRoomDto chatRoomDTO = chatRoomService.findRoom(roomId);
         Member loginMember = principal.getMember();
         if(loginMember.getId() != chatRoomDTO.getSellerId() && loginMember.getId() != chatRoomDTO.getSenderId()){
             response.sendError(403, "잘못된 요청입니다.");

@@ -1,12 +1,10 @@
 package clone.carrotMarket.repository;
 
 import clone.carrotMarket.domain.ChatRoom;
-import clone.carrotMarket.dto.ChatRoomDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
-import javax.annotation.PostConstruct;
+
 import java.util.*;
-import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 

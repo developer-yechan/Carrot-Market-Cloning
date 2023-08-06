@@ -1,7 +1,5 @@
 package clone.carrotMarket.api.controller;
-import clone.carrotMarket.dto.ErrorDTO;
-import clone.carrotMarket.dto.LoginDto;
-import clone.carrotMarket.dto.SuccessDTO;
+import clone.carrotMarket.dto.*;
 import clone.carrotMarket.service.LoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Tag(name = "Login / Logout", description = "로그인 / 로그아웃 API")
@@ -24,23 +21,27 @@ public class LoginApiController {
 
     @Operation(summary = "login", description = "회원 임을 인증하고 토큰을 발급받는다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = SuccessDTO.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "200", description = "로그인 성공", content = @Content(schema = @Schema(implementation = SuccessLoginResponse.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/login")
-    public SuccessDTO login(@RequestBody @Valid LoginDto loginDto){
+    public SuccessLoginResponse login(@RequestBody @Valid LoginDto loginDto){
         String accessToken = loginService.login(loginDto.getUsername(), loginDto.getPassword());
-        return new SuccessDTO(200,accessToken);
+        return new SuccessLoginResponse(200,"로그인 성공",accessToken);
     }
 
     @Operation(summary = "logout", description = "로그아웃한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "로그아웃 성공", content = @Content(schema = @Schema(implementation = SuccessDTO.class))),
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공", content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PostMapping("/logout")
-    public SuccessDTO logout(){
+    public SuccessResponse logout(){
         loginService.logout();
-        return new SuccessDTO(200,"로그아웃 성공");
+        return new SuccessResponse(200,"로그아웃 성공");
     }
 }

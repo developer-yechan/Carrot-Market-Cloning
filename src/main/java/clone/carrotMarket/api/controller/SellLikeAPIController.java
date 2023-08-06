@@ -1,9 +1,10 @@
 package clone.carrotMarket.api.controller;
 import clone.carrotMarket.domain.Member;
 import clone.carrotMarket.domain.SellStatus;
-import clone.carrotMarket.dto.ErrorDTO;
+import clone.carrotMarket.dto.ErrorResponse400;
+import clone.carrotMarket.dto.ErrorResponse;
 import clone.carrotMarket.dto.SellDto;
-import clone.carrotMarket.dto.SuccessDTO;
+import clone.carrotMarket.dto.SuccessResponse;
 import clone.carrotMarket.service.SellLikeService;
 import clone.carrotMarket.web.security.PrincipalDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,34 +34,40 @@ public class SellLikeAPIController {
 
     @Operation(summary = "관심상품 등록", description = "관심상품을 등록한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "관심상품 등록 성공", content = @Content(schema = @Schema(implementation = SuccessDTO.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "200", description = "관심상품 등록 성공", content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameter(name="sellId", description = "판매글 id")
     @PostMapping("/{sellId}")
-    public SuccessDTO addSellLike(@PathVariable Long sellId, @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principal ){
+    public SuccessResponse addSellLike(@PathVariable Long sellId, @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principal ){
         Member loginMember = principal.getMember();
         sellLikeService.addSellLike(sellId, loginMember);
-        return new SuccessDTO(201,"관심상품 등록 완료");
+        return new SuccessResponse(201,"관심상품 등록 완료");
     }
 
     @Operation(summary = "관심상품 삭제", description = "관심상품을 삭제한다.")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "관심상품 삭제 성공", content = @Content(schema = @Schema(implementation = SuccessDTO.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "200", description = "관심상품 삭제 성공", content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameter(name="sellId", description = "판매글 id")
     @DeleteMapping("/{sellId}")
-    public SuccessDTO deleteSellLike(@PathVariable Long sellId, @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principal){
+    public SuccessResponse deleteSellLike(@PathVariable Long sellId, @Parameter(hidden = true) @AuthenticationPrincipal PrincipalDetails principal){
         Member loginMember = principal.getMember();
         sellLikeService.deleteSellLike(sellId, loginMember);
-        return new SuccessDTO(200,"관심상품 삭제 완료");
+        return new SuccessResponse(200,"관심상품 삭제 완료");
     }
 
     @Operation(summary = "관심상품 목록 조회", description = "관심상품 목록을 조회한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "관심상품 목록 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorDTO.class))),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ErrorResponse400.class))),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     @Parameters({
             @Parameter(name="memberId",description = "회원 id"),
