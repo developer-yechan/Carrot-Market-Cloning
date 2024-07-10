@@ -1,6 +1,7 @@
 package clone.carrotMarket.service;
 import clone.carrotMarket.domain.*;
 import clone.carrotMarket.dto.*;
+import clone.carrotMarket.file.LocalUpload;
 import clone.carrotMarket.file.S3Upload;
 import clone.carrotMarket.repository.SellLikeRepository;
 import clone.carrotMarket.repository.SellRepository;
@@ -24,7 +25,8 @@ public class SellService {
     private final SellRepository sellRepository;
 
     private final SellLikeRepository sellLikeRepository;
-    private final S3Upload s3Upload;
+//    private final S3Upload s3Upload;
+    private final LocalUpload localUpload;
 
     @Transactional
     public Long update(EditSellDto editSellDto) throws IOException {
@@ -33,7 +35,7 @@ public class SellService {
             Sell mySell = mySells.get(0);
             if(editSellDto.getImageFiles() != null){
                 if(StringUtils.hasText(editSellDto.getImageFiles().get(0).getOriginalFilename())){
-                    List<ProductImage> productImages = s3Upload.getProductImages(editSellDto.getImageFiles());
+                    List<ProductImage> productImages = localUpload.getProductImages(editSellDto.getImageFiles());
                     mySell.getProductImages().clear();
                     for (ProductImage productImage : productImages) {
                         mySell.addProductImage(productImage);
@@ -59,7 +61,7 @@ public class SellService {
         try{
             List<ProductImage> productImages = new ArrayList<>();
             if(createSellDto.getImageFiles() != null){
-                productImages = s3Upload.getProductImages(createSellDto.getImageFiles());
+                productImages = localUpload.getProductImages(createSellDto.getImageFiles());
             }
             Place place = new Place(createSellDto.getPlace(), createSellDto.getLatitude(), createSellDto.getLongitude());
             Sell sell = Sell.createSell(loginMember, productImages, createSellDto.getTitle(),

@@ -1,6 +1,7 @@
 package clone.carrotMarket.service;
 import clone.carrotMarket.domain.Member;
 import clone.carrotMarket.dto.EditMemberDto;
+import clone.carrotMarket.file.LocalUpload;
 import clone.carrotMarket.file.S3Upload;
 import clone.carrotMarket.repository.MemberRepository;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final S3Upload s3Upload;
+//    private final S3Upload s3Upload;
+    private final LocalUpload localpload;
 
     @Transactional
     public Long signUp(Member member){
@@ -43,7 +45,7 @@ public class MemberService {
             Member member = memberRepository.findMemberById(editMemberDto.getId());
             if(editMemberDto.getImageFile() != null){
                 if(StringUtils.hasText(editMemberDto.getImageFile().getOriginalFilename())){
-                    String storeFileName = s3Upload.upload(editMemberDto.getImageFile(),"profile");
+                    String storeFileName = localpload.upload(editMemberDto.getImageFile(),"profile");
                     member.setProfileImage(storeFileName);
                 }
             }
