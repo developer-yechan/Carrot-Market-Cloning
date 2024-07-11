@@ -1,17 +1,19 @@
-cloud:
-  aws:
-    s3:
-      bucket: carrot-market-yechan
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
-    credentials:
-      instanceProfile: true
+#cloud:
+#  aws:
+#    s3:
+#      bucket: carrot-market-yechan
+#    region:
+#      static: ap-northeast-2
+#    stack:
+#      auto: false
+#    credentials:
+#      instanceProfile: true
 spring:
+  thymeleaf:
+    cache : false
   config:
     import :
-      - aws.yml
+#      - aws.yml
       - localDB.yml
       - jwt.yml
   redis:
