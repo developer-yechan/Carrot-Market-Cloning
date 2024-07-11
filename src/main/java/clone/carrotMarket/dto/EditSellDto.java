@@ -1,7 +1,7 @@
 package clone.carrotMarket.dto;
 import clone.carrotMarket.domain.Category;
 import clone.carrotMarket.domain.Sell;
-import lombok.Data;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
@@ -9,7 +9,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@ToString
 public class EditSellDto {
 
     private Long sellId;

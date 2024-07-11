@@ -1,12 +1,16 @@
 package clone.carrotMarket.dto;
 
 import clone.carrotMarket.domain.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@ToString
 public class SellDto {
     private Long sellId;
     private String title;

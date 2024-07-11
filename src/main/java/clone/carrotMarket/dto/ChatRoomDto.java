@@ -1,13 +1,17 @@
 package clone.carrotMarket.dto;
 
 import clone.carrotMarket.domain.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@ToString
 public class ChatRoomDto {
     private Long id;
     private Long sellerId;
@@ -41,7 +45,7 @@ public class ChatRoomDto {
         sellTitle = chatRoom.getSell().getTitle();
         sellStatus = chatRoom.getSell().getSellStatus();
         price = chatRoom.getSell().getPrice();
-        if(chatRoom.getSell().getProductImages().size()>0){
+        if(!chatRoom.getSell().getProductImages().isEmpty()){
             ProductImageDto representProductImage = new ProductImageDto(chatRoom.getSell().getProductImages()
                     .stream().filter(image -> image.getImageRank() == ImageRank.대표)
                     .collect(Collectors.toList()).get(0));

@@ -1,9 +1,11 @@
 package clone.carrotMarket.dto;
 
-import lombok.Data;
+import lombok.*;
 
 
-@Data
+@Getter
+@ToString
+@AllArgsConstructor
 public class MyPageMemberDto {
 
     private Long id;
@@ -11,9 +13,4 @@ public class MyPageMemberDto {
 
     private String profileImage;
 
-    public MyPageMemberDto(Long id, String nickname, String profileImage) {
-        this.id = id;
-        this.nickname = nickname;
-        this.profileImage = profileImage;
-    }
 }

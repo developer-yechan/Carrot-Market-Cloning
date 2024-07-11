@@ -1,10 +1,10 @@
 package clone.carrotMarket.dto;
 
 import clone.carrotMarket.domain.ChatMessage;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@ToString
 @NoArgsConstructor
 public class ChatMessageDto {
     private Long roomId;
