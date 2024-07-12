@@ -7,19 +7,15 @@ import javax.validation.constraints.NotEmpty;
 
 
 @Data
-@Setter(AccessLevel.NONE)
 public class EditMemberDto {
 
-    @Setter
     private Long id;
 
     @NotEmpty
-    @Setter
     private String nickname;
 
     private MultipartFile imageFile;
 
-    @Setter
     private String profileImage;
 
 }

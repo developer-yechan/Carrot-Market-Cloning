@@ -5,8 +5,7 @@ import lombok.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-@Getter
-@ToString
+@Data
 public class LoginDto {
     @NotEmpty
     @Email

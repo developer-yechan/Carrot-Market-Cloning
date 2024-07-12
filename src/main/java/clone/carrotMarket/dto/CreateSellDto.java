@@ -9,9 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Getter
-@ToString
-@RequiredArgsConstructor
+@Data
 public class CreateSellDto {
 
     private List<MultipartFile> imageFiles;

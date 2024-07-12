@@ -3,8 +3,7 @@ package clone.carrotMarket.dto;
 import clone.carrotMarket.domain.ChatMessage;
 import lombok.*;
 
-@Getter
-@ToString
+@Data
 @NoArgsConstructor
 public class ChatMessageDto {
     private Long roomId;

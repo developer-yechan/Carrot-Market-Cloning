@@ -45,7 +45,7 @@ public class MemberService {
             Member member = memberRepository.findMemberById(editMemberDto.getId());
             if(editMemberDto.getImageFile() != null){
                 if(StringUtils.hasText(editMemberDto.getImageFile().getOriginalFilename())){
-                    String storeFileName = localpload.upload(editMemberDto.getImageFile(),"profile");
+                    String storeFileName = localpload.upload(editMemberDto.getImageFile());
                     member.setProfileImage(storeFileName);
                 }
             }

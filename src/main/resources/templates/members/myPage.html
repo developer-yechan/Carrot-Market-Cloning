@@ -57,7 +57,7 @@
 <div class="container">
   <h4>나의 당근</h4>
   <div class="profile-section">
-    <img th:if="${member.profileImage != null}" th:src="${member.profileImage}" alt="유저 이미지" width="30px" height="30px">
+    <img th:if="${member.profileImage != null}" th:src="|/image/product/${member.profileImage}" alt="유저 이미지" width="30px" height="30px">
     <img th:if="${member.profileImage == null}" th:src="|/image/basicProfile.png|" alt="유저 이미지" width="30px" height="30px">
     <span class="nickname" th:text="${member.nickname}">닉네임</span>
   </div>

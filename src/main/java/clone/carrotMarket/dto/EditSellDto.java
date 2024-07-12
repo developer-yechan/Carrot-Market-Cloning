@@ -9,8 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
-@ToString
+@Data
 public class EditSellDto {
 
     private Long sellId;
