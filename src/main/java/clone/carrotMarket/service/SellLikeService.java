@@ -1,14 +1,11 @@
 package clone.carrotMarket.service;
 
 import clone.carrotMarket.domain.Member;
-import clone.carrotMarket.domain.Sell;
 import clone.carrotMarket.domain.SellLike;
 import clone.carrotMarket.domain.SellStatus;
 import clone.carrotMarket.dto.SellDto;
-import clone.carrotMarket.repository.MemberRepository;
 import clone.carrotMarket.repository.SellLikeRepository;
-import clone.carrotMarket.repository.SellRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class SellLikeService {
 
