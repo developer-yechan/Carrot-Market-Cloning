@@ -4,12 +4,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -48,6 +45,14 @@ public class Member{
         this.phoneNumber = phoneNumber;
         this.nickname = nickname;
         this.myPlace = myPlace;
+    }
+
+    public void removeProfileImage(){
+        if(this.profileImage != null){
+            this.profileImage = null;
+        }else{
+            throw new IllegalStateException("프로필 사진이 이미 삭제되었습니다.");
+        }
     }
 
     @Override

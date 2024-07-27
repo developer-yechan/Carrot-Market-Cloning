@@ -1,8 +1,7 @@
 package clone.carrotMarket.dto;
 
 import clone.carrotMarket.domain.ChatMessage;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor

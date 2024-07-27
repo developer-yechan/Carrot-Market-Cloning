@@ -28,7 +28,7 @@ public class LocalUpload {
         for(int i = 0; i< multipartFiles.size(); i++){
             if(!multipartFiles.get(i).isEmpty()){
                 MultipartFile imageFile = multipartFiles.get(i);
-                String uuidName = upload(imageFile, "product");
+                String uuidName = upload(imageFile);
                 String downloadPath = "/image/product/"+ uuidName;
                 if(i == 0){
                     ProductImage productImage = new ProductImage(downloadPath, ImageRank.대표);
@@ -41,7 +41,7 @@ public class LocalUpload {
         }
         return productImages;
     }
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
+    public String upload(MultipartFile multipartFile) throws IOException {
         if(multipartFile.isEmpty()){
             return null;
         }

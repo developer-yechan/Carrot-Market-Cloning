@@ -1,19 +1,20 @@
 package clone.carrotMarket.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.util.HashMap;
 import java.util.Map;
 
 
-@Data
+@Getter
+@ToString
+@AllArgsConstructor
 public class SellDetailPageDto {
 
     private Map<String,Object> sellDetailMap;
     private Long roomId;
 
-    public SellDetailPageDto(Map<String, Object> sellDetailMap, Long roomId) {
-        this.sellDetailMap = sellDetailMap;
-        this.roomId = roomId;
-    }
 }

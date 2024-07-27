@@ -2,7 +2,7 @@ package clone.carrotMarket.dto;
 
 import clone.carrotMarket.domain.Category;
 import clone.carrotMarket.domain.Place;
-import lombok.Data;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;

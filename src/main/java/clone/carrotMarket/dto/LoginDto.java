@@ -1,6 +1,6 @@
 package clone.carrotMarket.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

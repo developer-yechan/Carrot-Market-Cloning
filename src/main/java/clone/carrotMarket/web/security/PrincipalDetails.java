@@ -1,16 +1,23 @@
 package clone.carrotMarket.web.security;
 import clone.carrotMarket.domain.Member;
 import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
-@Data
+@ToString
 public class PrincipalDetails implements UserDetails {
     private Member member;
     public PrincipalDetails(Member member){
         this.member = member;
     }
+
+    public Member getMember() {
+        return member;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;

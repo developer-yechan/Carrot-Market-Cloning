@@ -1,25 +1,23 @@
 package clone.carrotMarket.service;
 import clone.carrotMarket.domain.Member;
+import clone.carrotMarket.domain.manager.MemberManager;
 import clone.carrotMarket.dto.EditMemberDto;
-import clone.carrotMarket.file.LocalUpload;
-import clone.carrotMarket.file.S3Upload;
 import clone.carrotMarket.repository.MemberRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.util.List;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
-//    private final S3Upload s3Upload;
-    private final LocalUpload localpload;
+    private final MemberManager memberManager;
+
 
     @Transactional
     public Long signUp(Member member){
@@ -43,13 +41,7 @@ public class MemberService {
     public void editMember(EditMemberDto editMemberDto) throws IOException {
         try{
             Member member = memberRepository.findMemberById(editMemberDto.getId());
-            if(editMemberDto.getImageFile() != null){
-                if(StringUtils.hasText(editMemberDto.getImageFile().getOriginalFilename())){
-                    String storeFileName = localpload.upload(editMemberDto.getImageFile(),"profile");
-                    member.setProfileImage(storeFileName);
-                }
-            }
-            member.setNickname(editMemberDto.getNickname());
+            memberManager.edit(member,editMemberDto);
         }catch (Exception e){
             throw new RuntimeException(e);
         }
@@ -59,11 +51,7 @@ public class MemberService {
     public void deleteProfileImage(Long memberId){
         try{
             Member member = memberRepository.findMemberById(memberId);
-            if(member.getProfileImage() != null){
-                member.setProfileImage(null);
-            }else{
-                throw new IllegalStateException("프로필 사진이 이미 삭제되었습니다.");
-            }
+            member.removeProfileImage();
         }catch (Exception e){
             throw new RuntimeException(e);
         }
